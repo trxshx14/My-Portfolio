@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import emailjs from "@emailjs/browser";
 
 const NAV_LINKS = ["Home", "About", "Works", "Experience", "Tech Stack", "Contact"];
 
@@ -22,7 +23,7 @@ const WORKS = [
     ),
     role: "Full-Stack Developer",
     problem: "Manual attendance tracking is error-prone and time-consuming for instructors.",
-    desc: "Attendance management system with REST API architecture and role-based access control for admins, instructors, and students.",
+    desc: "Attendance management system with REST API architecture and role-based access control for school admins and teachers.",
     tags: ["React", "Spring Boot", "MySQL"],
     accent: "#E2A4C4",
     github: "https://github.com/trxshx14/IT342-Cararag-AttendMe.git",
@@ -104,7 +105,7 @@ const EXPERIENCE = [
     type: "edu",
   },
   {
-    year: "2020 – 2022",
+    year: "2021 – 2023",
     role: "Senior High School Graduate",
     org: "Colegio de la Inmaculada Concepcion – Cebu",
     desc: "Completed Senior High School at CIC Cebu.",
@@ -151,6 +152,10 @@ export default function Portfolio() {
   const [cursorPos, setCursorPos] = useState({ x: -100, y: -100 });
   const heroRef = useRef(null);
 
+  const formRef = useRef(null);
+  const [isSending, setIsSending] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState(null);
+
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 30);
     window.addEventListener("scroll", onScroll);
@@ -167,6 +172,32 @@ export default function Portfolio() {
     const el = document.getElementById(id.toLowerCase());
     if (el) el.scrollIntoView({ behavior: "smooth" });
     setActiveNav(id);
+  };
+
+  const sendEmail = (e) => {
+    e.preventDefault();
+    setIsSending(true);
+    setSubmitStatus(null);
+
+    // Swap out "YOUR_PUBLIC_KEY" with the actual API key from your EmailJS Account tab!
+    const SERVICE_ID = "gmail"; 
+    const TEMPLATE_ID = "i1kpvwp"; 
+    const PUBLIC_KEY = "pVt7NUKHBmxf1NQ7v"; 
+
+    emailjs
+      .sendForm(SERVICE_ID, TEMPLATE_ID, formRef.current, PUBLIC_KEY)
+      .then(
+        () => {
+          setIsSending(false);
+          setSubmitStatus("success");
+          formRef.current.reset(); 
+        },
+        (error) => {
+          console.error("EmailJS Error:", error);
+          setIsSending(false);
+          setSubmitStatus("error");
+        }
+      );
   };
 
   return (
@@ -869,37 +900,60 @@ export default function Portfolio() {
           </p>
 
           <div className="glass-card" style={{ padding: 40, textAlign: "left" }}>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 16 }}>
-              <div>
-                <label style={{ fontSize: 11, fontWeight: 600, color: "#9A8DB0", letterSpacing: "0.06em", display: "block", marginBottom: 8 }}>NAME</label>
-                <input className="contact-input" placeholder="Your name" />
-              </div>
-              <div>
-                <label style={{ fontSize: 11, fontWeight: 600, color: "#9A8DB0", letterSpacing: "0.06em", display: "block", marginBottom: 8 }}>EMAIL</label>
-                <input className="contact-input" placeholder="you@example.com" />
-              </div>
-            </div>
-            <div style={{ marginBottom: 16 }}>
-              <label style={{ fontSize: 11, fontWeight: 600, color: "#9A8DB0", letterSpacing: "0.06em", display: "block", marginBottom: 8 }}>TYPE OF PROJECT</label>
-              <select className="contact-input" style={{ cursor: "pointer" }}>
-                <option value="" style={{ background: "#1E1833" }}>Select one...</option>
-                <option value="internship" style={{ background: "#1E1833" }}>Internship Opportunity</option>
-                <option value="freelance" style={{ background: "#1E1833" }}>Freelance Project</option>
-                <option value="collaboration" style={{ background: "#1E1833" }}>Collaboration</option>
-                <option value="other" style={{ background: "#1E1833" }}>Other</option>
-              </select>
-            </div>
-            <div style={{ marginBottom: 24 }}>
-              <label style={{ fontSize: 11, fontWeight: 600, color: "#9A8DB0", letterSpacing: "0.06em", display: "block", marginBottom: 8 }}>MESSAGE</label>
-              <textarea className="contact-input" placeholder="Tell me about your project or opportunity..." rows={4} style={{ resize: "vertical" }} />
-            </div>
-            <button className="pill-btn" style={{ width: "100%", padding: "14px", fontSize: 14, fontFamily: "inherit", justifyContent: "center" }}>
-              Send Message
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginLeft: 4 }}>
-                <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
-              </svg>
-            </button>
-          </div>
+  {/* Standard form wrapping with ref and submit handlers linked */}
+  <form ref={formRef} onSubmit={sendEmail}>
+    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 16 }}>
+      <div>
+        <label style={{ fontSize: 11, fontWeight: 600, color: "#9A8DB0", letterSpacing: "0.06em", display: "block", marginBottom: 8 }}>NAME</label>
+        <input className="contact-input" name="user_name" placeholder="Your name" required />
+      </div>
+      <div>
+        <label style={{ fontSize: 11, fontWeight: 600, color: "#9A8DB0", letterSpacing: "0.06em", display: "block", marginBottom: 8 }}>EMAIL</label>
+        <input className="contact-input" type="email" name="user_email" placeholder="you@example.com" required />
+      </div>
+    </div>
+    <div style={{ marginBottom: 16 }}>
+      <label style={{ fontSize: 11, fontWeight: 600, color: "#9A8DB0", letterSpacing: "0.06em", display: "block", marginBottom: 8 }}>TYPE OF PROJECT</label>
+      <select className="contact-input" name="project_type" style={{ cursor: "pointer" }} required>
+        <option value="" style={{ background: "#1E1833" }}>Select one...</option>
+        <option value="Internship Opportunity" style={{ background: "#1E1833" }}>Internship Opportunity</option>
+        <option value="Freelance Project" style={{ background: "#1E1833" }}>Freelance Project</option>
+        <option value="Collaboration" style={{ background: "#1E1833" }}>Collaboration</option>
+        <option value="Other" style={{ background: "#1E1833" }}>Other</option>
+      </select>
+    </div>
+    <div style={{ marginBottom: 24 }}>
+      <label style={{ fontSize: 11, fontWeight: 600, color: "#9A8DB0", letterSpacing: "0.06em", display: "block", marginBottom: 8 }}>MESSAGE</label>
+      <textarea className="contact-input" name="message" placeholder="Tell me about your project or opportunity..." rows={4} style={{ resize: "vertical" }} required />
+    </div>
+    
+    <button 
+      type="submit" 
+      className="pill-btn" 
+      disabled={isSending} 
+      style={{ width: "100%", padding: "14px", fontSize: 14, fontFamily: "inherit", justifyContent: "center" }}
+    >
+      {isSending ? "Sending Message..." : "Send Message"}
+      {!isSending && (
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginLeft: 4 }}>
+          <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+        </svg>
+      )}
+    </button>
+
+    {/* UI Status messages display */}
+    {submitStatus === "success" && (
+      <div style={{ marginTop: 16, color: "#5DCAA5", fontSize: 13, textAlign: "center", fontWeight: 500 }}>
+        ✓ Message sent safely! I'll get back to you shortly.
+      </div>
+    )}
+    {submitStatus === "error" && (
+      <div style={{ marginTop: 16, color: "#FAC775", fontSize: 13, textAlign: "center", fontWeight: 500 }}>
+        ✕ Something went wrong. Please check your network or reach me via email directly!
+      </div>
+    )}
+  </form>
+</div>
 
           <div style={{ display: "flex", justifyContent: "center", gap: 20, marginTop: 28 }}>
             {[
