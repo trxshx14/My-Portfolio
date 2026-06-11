@@ -89,7 +89,6 @@ const STACK = [
 ];
 
 const EXPERIENCE = [
-
   {
     year: "2026 - Present",
     role: "Full-Stack Developer",
@@ -168,6 +167,45 @@ export default function Portfolio() {
     return () => window.removeEventListener("mousemove", onMove);
   }, []);
 
+  // New hook added for scroll spy feature
+  useEffect(() => {
+    const sectionIds = NAV_LINKS.map(link => link.toLowerCase());
+    
+    const observerOptions = {
+      root: null,
+      rootMargin: "-40% 0px -50% 0px", // Detects when the section occupies the center area of the screen
+      threshold: 0,
+    };
+
+    const observerCallback = (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          // Find the matching natural-cased name from NAV_LINKS array
+          const matchingLink = NAV_LINKS.find(
+            (link) => link.toLowerCase() === entry.target.id
+          );
+          if (matchingLink) {
+            setActiveNav(matchingLink);
+          }
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(observerCallback, observerOptions);
+
+    sectionIds.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+
+    return () => {
+      sectionIds.forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) observer.unobserve(el);
+      });
+    };
+  }, []);
+
   const scrollToSection = (id) => {
     const el = document.getElementById(id.toLowerCase());
     if (el) el.scrollIntoView({ behavior: "smooth" });
@@ -179,7 +217,6 @@ export default function Portfolio() {
     setIsSending(true);
     setSubmitStatus(null);
 
-    // Swap out "YOUR_PUBLIC_KEY" with the actual API key from your EmailJS Account tab!
     const SERVICE_ID = "gmail"; 
     const TEMPLATE_ID = "i1kpvwp"; 
     const PUBLIC_KEY = "pVt7NUKHBmxf1NQ7v"; 
@@ -900,7 +937,6 @@ export default function Portfolio() {
           </p>
 
           <div className="glass-card" style={{ padding: 40, textAlign: "left" }}>
-  {/* Standard form wrapping with ref and submit handlers linked */}
   <form ref={formRef} onSubmit={sendEmail}>
     <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 16 }}>
       <div>
@@ -941,7 +977,6 @@ export default function Portfolio() {
       )}
     </button>
 
-    {/* UI Status messages display */}
     {submitStatus === "success" && (
       <div style={{ marginTop: 16, color: "#5DCAA5", fontSize: 13, textAlign: "center", fontWeight: 500 }}>
         ✓ Message sent safely! I'll get back to you shortly.
