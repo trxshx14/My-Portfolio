@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import emailjs from "@emailjs/browser";
+
 
 const NAV_LINKS = ["Home", "About", "Works", "Experience", "Tech Stack", "Contact"];
 
@@ -24,10 +24,11 @@ const WORKS = [
     role: "Full-Stack Developer",
     problem: "Manual attendance tracking is error-prone and time-consuming for instructors.",
     desc: "Attendance management system with REST API architecture and role-based access control for school admins and teachers.",
-    tags: ["React", "Spring Boot", "MySQL"],
+    tags: ["React", "Spring Boot", "MySQL", "Android"],
     accent: "#E2A4C4",
     github: "https://github.com/trxshx14/IT342-Cararag-AttendMe.git",
     demo: "https://attendme-frontend.onrender.com/login",
+    apk: "/AttendMe.apk",
   },
 ];
 
@@ -41,7 +42,7 @@ const STACK = [
     ),
     items: [
       { name: "React", level: "Shipped" },
-      { name: "Next.js", level: "Shipped" },
+      { name: "HTML + CSS", level: "Shipped" },
       { name: "JavaScript", level: "Shipped" },
       { name: "Tailwind CSS", level: "Shipped" },
     ],
@@ -151,10 +152,6 @@ export default function Portfolio() {
   const [cursorPos, setCursorPos] = useState({ x: -100, y: -100 });
   const heroRef = useRef(null);
 
-  const formRef = useRef(null);
-  const [isSending, setIsSending] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState(null);
-
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 30);
     window.addEventListener("scroll", onScroll);
@@ -167,37 +164,28 @@ export default function Portfolio() {
     return () => window.removeEventListener("mousemove", onMove);
   }, []);
 
-  // New hook added for scroll spy feature
   useEffect(() => {
     const sectionIds = NAV_LINKS.map(link => link.toLowerCase());
-    
     const observerOptions = {
       root: null,
-      rootMargin: "-40% 0px -50% 0px", // Detects when the section occupies the center area of the screen
+      rootMargin: "-40% 0px -50% 0px",
       threshold: 0,
     };
-
     const observerCallback = (entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          // Find the matching natural-cased name from NAV_LINKS array
           const matchingLink = NAV_LINKS.find(
             (link) => link.toLowerCase() === entry.target.id
           );
-          if (matchingLink) {
-            setActiveNav(matchingLink);
-          }
+          if (matchingLink) setActiveNav(matchingLink);
         }
       });
     };
-
     const observer = new IntersectionObserver(observerCallback, observerOptions);
-
     sectionIds.forEach((id) => {
       const el = document.getElementById(id);
       if (el) observer.observe(el);
     });
-
     return () => {
       sectionIds.forEach((id) => {
         const el = document.getElementById(id);
@@ -210,31 +198,6 @@ export default function Portfolio() {
     const el = document.getElementById(id.toLowerCase());
     if (el) el.scrollIntoView({ behavior: "smooth" });
     setActiveNav(id);
-  };
-
-  const sendEmail = (e) => {
-    e.preventDefault();
-    setIsSending(true);
-    setSubmitStatus(null);
-
-    const SERVICE_ID = "gmail"; 
-    const TEMPLATE_ID = "i1kpvwp"; 
-    const PUBLIC_KEY = "pVt7NUKHBmxf1NQ7v"; 
-
-    emailjs
-      .sendForm(SERVICE_ID, TEMPLATE_ID, formRef.current, PUBLIC_KEY)
-      .then(
-        () => {
-          setIsSending(false);
-          setSubmitStatus("success");
-          formRef.current.reset(); 
-        },
-        (error) => {
-          console.error("EmailJS Error:", error);
-          setIsSending(false);
-          setSubmitStatus("error");
-        }
-      );
   };
 
   return (
@@ -298,10 +261,6 @@ export default function Portfolio() {
           0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.18; }
           50% { transform: translate(-50%, -50%) scale(1.15); opacity: 0.28; }
         }
-        @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
 
         .nav-link {
           color: var(--muted);
@@ -314,9 +273,7 @@ export default function Portfolio() {
           cursor: pointer;
           position: relative;
         }
-        .nav-link:hover, .nav-link.active {
-          color: var(--text);
-        }
+        .nav-link:hover, .nav-link.active { color: var(--text); }
         .nav-link.active::after {
           content: '';
           position: absolute;
@@ -343,10 +300,7 @@ export default function Portfolio() {
           align-items: center;
           gap: 6px;
         }
-        .pill-btn:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 4px 28px #E2A4C460;
-        }
+        .pill-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 28px #E2A4C460; }
 
         .pill-outline {
           background: transparent;
@@ -364,10 +318,7 @@ export default function Portfolio() {
           align-items: center;
           gap: 6px;
         }
-        .pill-outline:hover {
-          border-color: var(--pink);
-          color: var(--pink);
-        }
+        .pill-outline:hover { border-color: var(--pink); color: var(--pink); }
 
         .tag-pill {
           background: #1E1833;
@@ -380,11 +331,7 @@ export default function Portfolio() {
           display: inline-block;
           transition: all 0.2s;
         }
-        .tag-pill:hover {
-          border-color: var(--pink);
-          color: var(--pink);
-          background: #271C3C;
-        }
+        .tag-pill:hover { border-color: var(--pink); color: var(--pink); background: #271C3C; }
 
         .glass-card {
           background: linear-gradient(135deg, rgba(30,24,51,0.7), rgba(23,18,42,0.5));
@@ -419,9 +366,7 @@ export default function Portfolio() {
           display: block;
         }
 
-        .work-card {
-          animation: fadeUp 0.6s ease both;
-        }
+        .work-card { animation: fadeUp 0.6s ease both; }
         .work-card:nth-child(2) { animation-delay: 0.1s; }
         .work-card:nth-child(3) { animation-delay: 0.2s; }
 
@@ -438,194 +383,101 @@ export default function Portfolio() {
           justify-content: space-between;
           align-items: center;
         }
-        .stack-item:hover {
-          border-color: var(--mauve);
-          color: var(--text);
-          background: rgba(154,107,138,0.12);
-        }
+        .stack-item:hover { border-color: var(--mauve); color: var(--text); background: rgba(154,107,138,0.12); }
+
         .stack-badge-shipped {
-          font-size: 9px;
-          font-weight: 600;
-          letter-spacing: 0.08em;
-          text-transform: uppercase;
-          color: #5DCAA5;
-          background: rgba(93,202,165,0.1);
-          border: 1px solid rgba(93,202,165,0.25);
-          padding: 2px 7px;
-          border-radius: 100px;
+          font-size: 9px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+          color: #5DCAA5; background: rgba(93,202,165,0.1); border: 1px solid rgba(93,202,165,0.25);
+          padding: 2px 7px; border-radius: 100px;
         }
         .stack-badge-learning {
-          font-size: 9px;
-          font-weight: 600;
-          letter-spacing: 0.08em;
-          text-transform: uppercase;
-          color: #FAC775;
-          background: rgba(250,199,117,0.1);
-          border: 1px solid rgba(250,199,117,0.25);
-          padding: 2px 7px;
-          border-radius: 100px;
+          font-size: 9px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+          color: #FAC775; background: rgba(250,199,117,0.1); border: 1px solid rgba(250,199,117,0.25);
+          padding: 2px 7px; border-radius: 100px;
         }
 
         .cursor-aura {
-          position: fixed;
-          width: 280px;
-          height: 280px;
-          border-radius: 50%;
+          position: fixed; width: 280px; height: 280px; border-radius: 50%;
           background: radial-gradient(circle, #E2A4C418 0%, transparent 70%);
-          pointer-events: none;
-          z-index: 0;
+          pointer-events: none; z-index: 0;
           animation: cursorGlow 3s ease-in-out infinite;
           transition: left 0.12s ease-out, top 0.12s ease-out;
         }
 
         .hero-eyebrow {
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          background: rgba(226,164,196,0.08);
-          border: 1px solid rgba(226,164,196,0.2);
-          border-radius: 100px;
-          padding: 6px 14px;
-          font-size: 12px;
-          font-weight: 500;
-          color: var(--pink);
-          margin-bottom: 28px;
-          animation: slideIn 0.6s ease both;
+          display: inline-flex; align-items: center; gap: 8px;
+          background: rgba(226,164,196,0.08); border: 1px solid rgba(226,164,196,0.2);
+          border-radius: 100px; padding: 6px 14px; font-size: 12px; font-weight: 500;
+          color: var(--pink); margin-bottom: 28px; animation: slideIn 0.6s ease both;
         }
 
-        .stat-block {
-          display: flex;
-          flex-direction: column;
-          gap: 2px;
-        }
+        .stat-block { display: flex; flex-direction: column; gap: 2px; }
         .stat-num {
-          font-size: 28px;
-          font-weight: 700;
+          font-size: 28px; font-weight: 700;
           background: linear-gradient(135deg, var(--pink), var(--mauve));
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-          line-height: 1;
+          -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+          background-clip: text; line-height: 1;
         }
-        .stat-label {
-          font-size: 11px;
-          color: var(--muted);
-          font-weight: 400;
-        }
+        .stat-label { font-size: 11px; color: var(--muted); font-weight: 400; }
 
         .orbit-ring {
-          position: absolute;
-          border-radius: 50%;
+          position: absolute; border-radius: 50%;
           border: 1px dashed rgba(226,164,196,0.1);
-          top: 50%; left: 50%;
-          transform: translate(-50%, -50%);
+          top: 50%; left: 50%; transform: translate(-50%, -50%);
         }
 
-        .contact-input {
-          background: rgba(30,24,51,0.7);
-          border: 1px solid #3D2F55;
-          border-radius: 10px;
-          padding: 12px 16px;
-          color: var(--text);
-          font-size: 13.5px;
-          font-family: inherit;
-          outline: none;
-          width: 100%;
-          transition: border-color 0.2s;
+        .contact-card-link {
+          text-decoration: none; display: block;
         }
-        .contact-input:focus {
-          border-color: var(--pink);
-          box-shadow: 0 0 0 3px rgba(226,164,196,0.08);
-        }
-        .contact-input::placeholder {
-          color: var(--muted);
+        .contact-channel {
+          padding: 22px 28px;
+          display: flex; align-items: center; gap: 20;
+          text-align: left; cursor: pointer;
         }
 
         .timeline-dot {
-          width: 10px;
-          height: 10px;
-          border-radius: 50%;
-          flex-shrink: 0;
-          margin-top: 5px;
+          width: 10px; height: 10px; border-radius: 50%;
+          flex-shrink: 0; margin-top: 5px;
         }
 
         .social-link {
-          width: 36px;
-          height: 36px;
-          border-radius: 50%;
-          background: rgba(226,164,196,0.06);
-          border: 1px solid rgba(226,164,196,0.15);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
-          font-size: 13px;
-          color: var(--muted);
-          text-decoration: none;
-          transition: all 0.2s;
+          width: 36px; height: 36px; border-radius: 50%;
+          background: rgba(226,164,196,0.06); border: 1px solid rgba(226,164,196,0.15);
+          display: flex; align-items: center; justify-content: center;
+          cursor: pointer; font-size: 13px; color: var(--muted);
+          text-decoration: none; transition: all 0.2s;
         }
-        .social-link:hover {
-          border-color: var(--pink);
-          color: var(--pink);
-          background: rgba(226,164,196,0.1);
-        }
+        .social-link:hover { border-color: var(--pink); color: var(--pink); background: rgba(226,164,196,0.1); }
 
         .availability-badge {
-          display: inline-flex;
-          align-items: center;
-          gap: 7px;
-          background: rgba(93,202,165,0.08);
-          border: 1px solid rgba(93,202,165,0.25);
-          border-radius: 100px;
-          padding: 6px 14px;
-          font-size: 12px;
-          font-weight: 500;
-          color: #5DCAA5;
-          margin-bottom: 16px;
-          animation: slideIn 0.5s ease both;
+          display: inline-flex; align-items: center; gap: 7px;
+          background: rgba(93,202,165,0.08); border: 1px solid rgba(93,202,165,0.25);
+          border-radius: 100px; padding: 6px 14px; font-size: 12px; font-weight: 500;
+          color: #5DCAA5; margin-bottom: 16px; animation: slideIn 0.5s ease both;
         }
 
         .card-link-btn {
-          background: none;
-          border: none;
-          font-size: 12px;
-          cursor: pointer;
-          display: inline-flex;
-          align-items: center;
-          gap: 4px;
-          padding: 0;
-          transition: color 0.2s;
-          text-decoration: none;
-          font-family: inherit;
+          background: none; border: none; font-size: 12px; cursor: pointer;
+          display: inline-flex; align-items: center; gap: 4px;
+          padding: 0; transition: color 0.2s; text-decoration: none; font-family: inherit;
         }
 
         .about-card {
           background: linear-gradient(135deg, rgba(226,164,196,0.06), rgba(154,107,138,0.04));
-          border: 1px solid rgba(226,164,196,0.12);
-          border-radius: 16px;
-          padding: 24px;
+          border: 1px solid rgba(226,164,196,0.12); border-radius: 16px; padding: 24px;
         }
-
         .about-card-label {
-          font-size: 11px;
-          font-weight: 600;
-          letter-spacing: 0.08em;
-          text-transform: uppercase;
-          color: #9A7BB0;
-          margin-bottom: 3px;
+          font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
+          text-transform: uppercase; color: #9A7BB0; margin-bottom: 3px;
         }
-
-        .about-card-value {
-          font-size: 13.5px;
-          font-weight: 500;
-          color: #EDE8F5;
-        }
+        .about-card-value { font-size: 13.5px; font-weight: 500; color: #EDE8F5; }
 
         @media (max-width: 768px) {
           .hero-grid { grid-template-columns: 1fr !important; }
           .nav-links-mid { display: none !important; }
           .works-grid { grid-template-columns: 1fr !important; }
           .stack-grid { grid-template-columns: repeat(2, 1fr) !important; }
+          .about-grid { grid-template-columns: 1fr !important; }
         }
       `}</style>
 
@@ -636,7 +488,7 @@ export default function Portfolio() {
       <div style={{ position: "fixed", inset: 0, backgroundImage: "radial-gradient(circle at 1px 1px, rgba(226,164,196,0.04) 1px, transparent 0)", backgroundSize: "40px 40px", pointerEvents: "none", zIndex: 0 }} />
       <div style={{ position: "fixed", top: 0, left: "30%", width: 600, height: 600, background: "radial-gradient(ellipse, rgba(154,107,138,0.12) 0%, transparent 65%)", pointerEvents: "none", zIndex: 0 }} />
 
-      {/* NAV */}
+      {/* ─── NAV ─── */}
       <nav style={{
         position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
         display: "flex", alignItems: "center", justifyContent: "space-between",
@@ -660,18 +512,15 @@ export default function Portfolio() {
         </div>
 
         <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-          <a href="https://github.com/trxshx14" target="_blank" rel="noreferrer" className="social-link" title="GitHub">GH</a>
-          <a href="https://www.linkedin.com/in/trisha-raye-cararag/" target="_blank" rel="noreferrer" className="social-link" title="LinkedIn">in</a>
-          <a href="/Cararag_Resume_IT.pdf" className="pill-outline" style={{ padding: "8px 16px", fontSize: 12 }}>↓ Resume</a>
-          <button className="pill-btn" onClick={() => scrollToSection("Contact")} style={{ padding: "8px 18px", fontSize: 13 }}>Let's Work</button>
-        </div>
+  <a href="/Cararag_Resume_IT.pdf" target="_blank" rel="noreferrer" download className="pill-outline" style={{ padding: "8px 18px", fontSize: 13, height: 38, lineHeight: "1" }}>↓ Resume</a>
+<button className="pill-btn" onClick={() => scrollToSection("Contact")} style={{ padding: "8px 18px", fontSize: 13, height: 38, lineHeight: "1" }}>Let's Work</button>
+</div>
       </nav>
 
       {/* ─── HERO ─── */}
       <section id="home" ref={heroRef} style={{ minHeight: "100vh", display: "flex", alignItems: "center", padding: "100px 60px 60px", position: "relative", zIndex: 1 }}>
         <div className="hero-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 60, alignItems: "center", width: "100%", maxWidth: 1200, margin: "0 auto" }}>
 
-          {/* Left */}
           <div style={{ animation: "fadeUp 0.7s ease both" }}>
             <div className="availability-badge">
               <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#5DCAA5", display: "inline-block", animation: "statusPulse 2s ease-in-out infinite" }} />
@@ -716,7 +565,6 @@ export default function Portfolio() {
             </div>
           </div>
 
-          {/* Right */}
           <div style={{ position: "relative", height: 460, animation: "fadeUp 0.9s ease 0.15s both" }}>
             <div className="orbit-ring" style={{ width: 280, height: 280 }} />
             <div className="orbit-ring" style={{ width: 380, height: 380 }} />
@@ -756,7 +604,7 @@ export default function Portfolio() {
       <section id="about" style={{ padding: "80px 60px", position: "relative", zIndex: 1 }}>
         <div style={{ maxWidth: 1200, margin: "0 auto" }}>
           <span className="section-label">About Me</span>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 48, alignItems: "start" }}>
+          <div className="about-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 48, alignItems: "start" }}>
             <div>
               <h2 style={{ fontSize: 38, fontWeight: 800, color: "#EDE8F5", letterSpacing: "-0.02em", marginBottom: 20, fontFamily: "'Plus Jakarta Sans', sans-serif", lineHeight: 1.1 }}>
                 A builder who <span className="gradient-text">designs</span> and a designer who <span className="gradient-text">ships.</span>
@@ -768,7 +616,7 @@ export default function Portfolio() {
                 Whether it's architecting a Spring Boot REST API or crafting pixel-perfect Figma prototypes, I bring the same level of intentionality to both. Currently looking for internship opportunities where I can contribute and grow.
               </p>
               <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-                <a href="mailto:trisha@email.com" className="pill-btn" style={{ padding: "10px 20px", fontSize: 13 }}>✉ Email Me</a>
+                <a href="mailto:cararagtrisharaye@gmail.com" className="pill-btn" style={{ padding: "10px 20px", fontSize: 13 }}>✉ Email Me</a>
                 <a href="https://github.com/trxshx14" target="_blank" rel="noreferrer" className="pill-outline" style={{ padding: "10px 20px", fontSize: 13 }}>GitHub ↗</a>
               </div>
             </div>
@@ -805,63 +653,68 @@ export default function Portfolio() {
       </section>
 
       {/* ─── WORKS ─── */}
-      <section id="works" style={{ padding: "80px 60px", position: "relative", zIndex: 1 }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-          <span className="section-label">Selected Work</span>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 44 }}>
-            <h2 style={{ fontSize: 40, fontWeight: 800, color: "#EDE8F5", letterSpacing: "-0.02em", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>Things I've <span className="gradient-text">Built</span></h2>
-            <a href="https://github.com/trxshx14" target="_blank" rel="noreferrer" className="pill-outline" style={{ fontSize: 12 }}>GitHub Profile ↗</a>
+<section id="works" style={{ padding: "80px 60px", position: "relative", zIndex: 1 }}>
+  <div style={{ maxWidth: 1200, margin: "0 auto" }}>
+    <span className="section-label">Selected Work</span>
+    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 44 }}>
+      <h2 style={{ fontSize: 40, fontWeight: 800, color: "#EDE8F5", letterSpacing: "-0.02em", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>Things I've <span className="gradient-text">Built</span></h2>
+      <a href="https://github.com/trxshx14" target="_blank" rel="noreferrer" className="pill-outline" style={{ fontSize: 12 }}>GitHub Profile ↗</a>
+    </div>
+
+    <div className="works-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20 }}>
+      {WORKS.map((w) => (
+        <div key={w.title} className="glass-card work-card" style={{ padding: 28, display: "flex", flexDirection: "column" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16 }}>
+            <div style={{ width: 44, height: 44, borderRadius: 12, background: `${w.accent}18`, border: `1px solid ${w.accent}30`, display: "flex", alignItems: "center", justifyContent: "center" }}>
+              {w.icon(w.accent)}
+            </div>
+            <span style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: w.accent, background: `${w.accent}12`, padding: "4px 10px", borderRadius: 100 }}>{w.type}</span>
           </div>
 
-          <div className="works-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20 }}>
-            {WORKS.map((w) => (
-              <div key={w.title} className="glass-card work-card" style={{ padding: 28, display: "flex", flexDirection: "column" }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16 }}>
-                  <div style={{ width: 44, height: 44, borderRadius: 12, background: `${w.accent}18`, border: `1px solid ${w.accent}30`, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    {w.icon(w.accent)}
-                  </div>
-                  <span style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: w.accent, background: `${w.accent}12`, padding: "4px 10px", borderRadius: 100 }}>{w.type}</span>
-                </div>
+          <h3 style={{ fontSize: 20, fontWeight: 700, marginBottom: 6, letterSpacing: "-0.01em", color: "#EDE8F5" }}>{w.title}</h3>
 
-                <h3 style={{ fontSize: 20, fontWeight: 700, marginBottom: 6, letterSpacing: "-0.01em", color: "#EDE8F5" }}>{w.title}</h3>
+          <div style={{ fontSize: 11, color: w.accent, fontWeight: 600, marginBottom: 10, letterSpacing: "0.04em" }}>
+            ↳ {w.role}
+          </div>
 
-                <div style={{ fontSize: 11, color: w.accent, fontWeight: 600, marginBottom: 10, letterSpacing: "0.04em" }}>
-                  ↳ {w.role}
-                </div>
+          <div style={{ background: `${w.accent}08`, border: `1px solid ${w.accent}18`, borderRadius: 8, padding: "8px 12px", marginBottom: 12 }}>
+            <span style={{ fontSize: 10, fontWeight: 600, color: w.accent, letterSpacing: "0.08em", textTransform: "uppercase" }}>Problem · </span>
+            <span style={{ fontSize: 11.5, color: "#9A8DB0", lineHeight: 1.5 }}>{w.problem}</span>
+          </div>
 
-                <div style={{ background: `${w.accent}08`, border: `1px solid ${w.accent}18`, borderRadius: 8, padding: "8px 12px", marginBottom: 12 }}>
-                  <span style={{ fontSize: 10, fontWeight: 600, color: w.accent, letterSpacing: "0.08em", textTransform: "uppercase" }}>Problem · </span>
-                  <span style={{ fontSize: 11.5, color: "#9A8DB0", lineHeight: 1.5 }}>{w.problem}</span>
-                </div>
+          <p style={{ fontSize: 13, color: "#9A8DB0", lineHeight: 1.65, marginBottom: 16, flex: 1 }}>{w.desc}</p>
 
-                <p style={{ fontSize: 13, color: "#9A8DB0", lineHeight: 1.65, marginBottom: 16, flex: 1 }}>{w.desc}</p>
-
-                <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 20 }}>
-                  {w.tags.map(t => (
-                    <span key={t} style={{ fontSize: 11, fontWeight: 500, color: w.accent, background: `${w.accent}12`, padding: "4px 10px", borderRadius: 100, border: `1px solid ${w.accent}22` }}>{t}</span>
-                  ))}
-                </div>
-
-                <div style={{ display: "flex", gap: 16, borderTop: "1px solid rgba(226,164,196,0.08)", paddingTop: 16 }}>
-                  <a href={w.github} target="_blank" rel="noreferrer" className="card-link-btn" style={{ color: "#9A8DB0" }} onMouseEnter={e => e.currentTarget.style.color = w.accent} onMouseLeave={e => e.currentTarget.style.color = "#9A8DB0"}>
-                    GitHub ↗
-                  </a>
-                  {w.demo ? (
-                    <a href={w.demo} target="_blank" rel="noreferrer" className="card-link-btn" style={{ color: "#9A8DB0" }} onMouseEnter={e => e.currentTarget.style.color = w.accent} onMouseLeave={e => e.currentTarget.style.color = "#9A8DB0"}>
-                      Live Demo ↗
-                    </a>
-                  ) : (
-                    <span style={{ fontSize: 12, color: "#6B5F80", display: "flex", alignItems: "center", gap: 6 }}>
-                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#6B5F80" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
-                      Private Repo
-                    </span>
-                  )}
-                </div>
-              </div>
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 20 }}>
+            {w.tags.map(t => (
+              <span key={t} style={{ fontSize: 11, fontWeight: 500, color: w.accent, background: `${w.accent}12`, padding: "4px 10px", borderRadius: 100, border: `1px solid ${w.accent}22` }}>{t}</span>
             ))}
           </div>
+
+          <div style={{ display: "flex", gap: 16, borderTop: "1px solid rgba(226,164,196,0.08)", paddingTop: 16 }}>
+            <a href={w.github} target="_blank" rel="noreferrer" className="card-link-btn" style={{ color: "#9A8DB0" }} onMouseEnter={e => e.currentTarget.style.color = w.accent} onMouseLeave={e => e.currentTarget.style.color = "#9A8DB0"}>
+              GitHub ↗
+            </a>
+            {w.demo ? (
+              <a href={w.demo} target="_blank" rel="noreferrer" className="card-link-btn" style={{ color: "#9A8DB0" }} onMouseEnter={e => e.currentTarget.style.color = w.accent} onMouseLeave={e => e.currentTarget.style.color = "#9A8DB0"}>
+                Live Demo ↗
+              </a>
+            ) : (
+              <span style={{ fontSize: 12, color: "#6B5F80", display: "flex", alignItems: "center", gap: 6 }}>
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#6B5F80" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+                Private Repo
+              </span>
+            )}
+            {w.apk && (
+              <a href={w.apk} download className="card-link-btn" style={{ color: "#9A8DB0" }} onMouseEnter={e => e.currentTarget.style.color = w.accent} onMouseLeave={e => e.currentTarget.style.color = "#9A8DB0"}>
+                ↓ APK
+              </a>
+            )}
+          </div>
         </div>
-      </section>
+      ))}
+    </div>
+  </div>
+</section>
 
       {/* ─── EXPERIENCE ─── */}
       <section id="experience" style={{ padding: "60px 60px 80px", position: "relative", zIndex: 1 }}>
@@ -873,7 +726,6 @@ export default function Portfolio() {
 
           <div style={{ position: "relative", paddingLeft: 28 }}>
             <div style={{ position: "absolute", left: 4, top: 8, bottom: 8, width: 1, background: "linear-gradient(to bottom, #E2A4C440, #9A6B8A40, transparent)" }} />
-
             {EXPERIENCE.map((e, i) => (
               <div key={i} style={{ position: "relative", display: "flex", gap: 20, marginBottom: 32, animation: `fadeUp 0.6s ease ${i * 0.1}s both` }}>
                 <div className="timeline-dot" style={{ background: e.type === "edu" ? "#9A6B8A" : "#E2A4C4", boxShadow: `0 0 8px ${e.type === "edu" ? "#9A6B8A" : "#E2A4C4"}60`, position: "absolute", left: -24, top: 6 }} />
@@ -925,84 +777,115 @@ export default function Portfolio() {
         </div>
       </section>
 
+      {/* ─── CERTIFICATIONS ─── */}
+<section id="certifications" style={{ padding: "0 60px 80px", position: "relative", zIndex: 1 }}>
+  <div style={{ maxWidth: 1200, margin: "0 auto" }}>
+    <div style={{ borderTop: "1px solid rgba(226,164,196,0.08)", paddingTop: 48 }}>
+      <span className="section-label">Certifications</span>
+      <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+        {[
+          { name: "AI Ready ASEAN", issuer: "ASEAN Foundation & Google.org", year: "2025" },
+          { name: "Data Visualization", issuer: "Kaggle", year: "2025" },
+          { name: "Java OOP Certification", issuer: "CodeChum · CITU", year: "2025" },
+          { name: "ICT Congress", issuer: "PSITE Cebu", year: "2026" },
+        ].map((cert) => (
+          <div key={cert.name} style={{
+            display: "flex", alignItems: "center", gap: 14,
+            background: "linear-gradient(135deg, rgba(30,24,51,0.7), rgba(23,18,42,0.5))",
+            border: "1px solid rgba(226,164,196,0.12)",
+            borderRadius: 12, padding: "14px 20px",
+            transition: "border-color 0.2s",
+            cursor: "default",
+          }}
+            onMouseEnter={e => e.currentTarget.style.borderColor = "rgba(226,164,196,0.3)"}
+            onMouseLeave={e => e.currentTarget.style.borderColor = "rgba(226,164,196,0.12)"}
+          >
+            <div style={{ width: 8, height: 8, borderRadius: "50%", background: "linear-gradient(135deg, #E2A4C4, #9A6B8A)", flexShrink: 0 }} />
+            <div>
+              <div style={{ fontSize: 13, fontWeight: 600, color: "#EDE8F5", marginBottom: 2 }}>{cert.name}</div>
+              <div style={{ fontSize: 11, color: "#9A8DB0" }}>{cert.issuer} · {cert.year}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
       {/* ─── CONTACT ─── */}
       <section id="contact" style={{ padding: "80px 60px 100px", position: "relative", zIndex: 1 }}>
-        <div style={{ maxWidth: 680, margin: "0 auto", textAlign: "center" }}>
+        <div style={{ maxWidth: 640, margin: "0 auto", textAlign: "center" }}>
           <span className="section-label">Contact</span>
           <h2 style={{ fontSize: 44, fontWeight: 800, color: "#EDE8F5", letterSpacing: "-0.02em", marginBottom: 14, fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
             Let's build something <span className="gradient-text">together</span>
           </h2>
           <p style={{ fontSize: 14, color: "#9A8DB0", marginBottom: 48, lineHeight: 1.7 }}>
-            Open for internships, freelance projects, and collaborations. I respond within 24 hours.
+            Open for internships, freelance projects, and collaborations. Pick whatever works best for you — I respond within 24 hours.
           </p>
 
-          <div className="glass-card" style={{ padding: 40, textAlign: "left" }}>
-  <form ref={formRef} onSubmit={sendEmail}>
-    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 16 }}>
-      <div>
-        <label style={{ fontSize: 11, fontWeight: 600, color: "#9A8DB0", letterSpacing: "0.06em", display: "block", marginBottom: 8 }}>NAME</label>
-        <input className="contact-input" name="user_name" placeholder="Your name" required />
-      </div>
-      <div>
-        <label style={{ fontSize: 11, fontWeight: 600, color: "#9A8DB0", letterSpacing: "0.06em", display: "block", marginBottom: 8 }}>EMAIL</label>
-        <input className="contact-input" type="email" name="user_email" placeholder="you@example.com" required />
-      </div>
-    </div>
-    <div style={{ marginBottom: 16 }}>
-      <label style={{ fontSize: 11, fontWeight: 600, color: "#9A8DB0", letterSpacing: "0.06em", display: "block", marginBottom: 8 }}>TYPE OF PROJECT</label>
-      <select className="contact-input" name="project_type" style={{ cursor: "pointer" }} required>
-        <option value="" style={{ background: "#1E1833" }}>Select one...</option>
-        <option value="Internship Opportunity" style={{ background: "#1E1833" }}>Internship Opportunity</option>
-        <option value="Freelance Project" style={{ background: "#1E1833" }}>Freelance Project</option>
-        <option value="Collaboration" style={{ background: "#1E1833" }}>Collaboration</option>
-        <option value="Other" style={{ background: "#1E1833" }}>Other</option>
-      </select>
-    </div>
-    <div style={{ marginBottom: 24 }}>
-      <label style={{ fontSize: 11, fontWeight: 600, color: "#9A8DB0", letterSpacing: "0.06em", display: "block", marginBottom: 8 }}>MESSAGE</label>
-      <textarea className="contact-input" name="message" placeholder="Tell me about your project or opportunity..." rows={4} style={{ resize: "vertical" }} required />
-    </div>
-    
-    <button 
-      type="submit" 
-      className="pill-btn" 
-      disabled={isSending} 
-      style={{ width: "100%", padding: "14px", fontSize: 14, fontFamily: "inherit", justifyContent: "center" }}
-    >
-      {isSending ? "Sending Message..." : "Send Message"}
-      {!isSending && (
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginLeft: 4 }}>
-          <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
-        </svg>
-      )}
-    </button>
+          <div style={{ display: "flex", flexDirection: "column", gap: 14, marginBottom: 40 }}>
 
-    {submitStatus === "success" && (
-      <div style={{ marginTop: 16, color: "#5DCAA5", fontSize: 13, textAlign: "center", fontWeight: 500 }}>
-        ✓ Message sent safely! I'll get back to you shortly.
-      </div>
-    )}
-    {submitStatus === "error" && (
-      <div style={{ marginTop: 16, color: "#FAC775", fontSize: 13, textAlign: "center", fontWeight: 500 }}>
-        ✕ Something went wrong. Please check your network or reach me via email directly!
-      </div>
-    )}
-  </form>
-</div>
+            {/* Email */}
+            <a href="mailto:cararagtrisharaye@gmail.com" style={{ textDecoration: "none" }}>
+              <div className="glass-card" style={{ padding: "22px 28px", display: "flex", alignItems: "center", gap: 20, textAlign: "left" }}>
+                <div style={{ width: 48, height: 48, borderRadius: 14, background: "rgba(226,164,196,0.1)", border: "1px solid rgba(226,164,196,0.25)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#E2A4C4" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                    <polyline points="22,6 12,13 2,6"/>
+                  </svg>
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: 15, fontWeight: 700, color: "#EDE8F5", marginBottom: 3 }}>Send Me an Email</div>
+                  <div style={{ fontSize: 13, color: "#9A8DB0" }}>cararagtrisharaye@gmail.com</div>
+                </div>
+                <div style={{ fontSize: 20, color: "#E2A4C4" }}>↗</div>
+              </div>
+            </a>
 
-          <div style={{ display: "flex", justifyContent: "center", gap: 20, marginTop: 28 }}>
-            {[
-              { label: "GitHub", href: "https://github.com/trxshx14" },
-              { label: "LinkedIn", href: "#" },
-              { label: "Email", href: "mailto:trisha@email.com" },
-            ].map(s => (
-              <a key={s.label} href={s.href} target="_blank" rel="noreferrer" style={{ fontSize: 12, color: "#6B5F80", cursor: "pointer", transition: "color 0.2s", textDecoration: "none" }} onMouseEnter={e => e.target.style.color = "#E2A4C4"} onMouseLeave={e => e.target.style.color = "#6B5F80"}>{s.label} ↗</a>
-            ))}
+            {/* LinkedIn */}
+            <a href="https://www.linkedin.com/in/trisha-raye-cararag/" target="_blank" rel="noreferrer" style={{ textDecoration: "none" }}>
+              <div className="glass-card" style={{ padding: "22px 28px", display: "flex", alignItems: "center", gap: 20, textAlign: "left" }}>
+                <div style={{ width: 48, height: 48, borderRadius: 14, background: "rgba(154,107,138,0.1)", border: "1px solid rgba(154,107,138,0.25)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#9A6B8A" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/>
+                    <rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/>
+                  </svg>
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: 15, fontWeight: 700, color: "#EDE8F5", marginBottom: 3 }}>Connect on LinkedIn</div>
+                  <div style={{ fontSize: 13, color: "#9A8DB0" }}>linkedin.com/in/trisha-raye-cararag</div>
+                </div>
+                <div style={{ fontSize: 20, color: "#9A6B8A" }}>↗</div>
+              </div>
+            </a>
+
+            {/* GitHub */}
+            <a href="https://github.com/trxshx14" target="_blank" rel="noreferrer" style={{ textDecoration: "none" }}>
+              <div className="glass-card" style={{ padding: "22px 28px", display: "flex", alignItems: "center", gap: 20, textAlign: "left" }}>
+                <div style={{ width: 48, height: 48, borderRadius: 14, background: "rgba(200,184,216,0.08)", border: "1px solid rgba(200,184,216,0.2)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C8B8D8" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/>
+                  </svg>
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: 15, fontWeight: 700, color: "#EDE8F5", marginBottom: 3 }}>See My Work on GitHub</div>
+                  <div style={{ fontSize: 13, color: "#9A8DB0" }}>github.com/trxshx14</div>
+                </div>
+                <div style={{ fontSize: 20, color: "#C8B8D8" }}>↗</div>
+              </div>
+            </a>
+
+          </div>
+
+          {/* Availability pill */}
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(93,202,165,0.06)", border: "1px solid rgba(93,202,165,0.2)", borderRadius: 100, padding: "8px 18px", fontSize: 12, color: "#5DCAA5", fontWeight: 500 }}>
+            <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#5DCAA5", display: "inline-block", animation: "statusPulse 2s ease-in-out infinite" }} />
+            Available for internships & freelance · 2026
           </div>
         </div>
       </section>
 
-      {/* FOOTER */}
+      {/* ─── FOOTER ─── */}
       <footer style={{ borderTop: "1px solid rgba(226,164,196,0.08)", padding: "24px 60px", display: "flex", justifyContent: "space-between", alignItems: "center", position: "relative", zIndex: 1 }}>
         <div style={{ fontSize: 13, color: "#6B5F80" }}>
           <span style={{ color: "#E2A4C4" }}>&lt;</span>trisha.dev<span style={{ color: "#E2A4C4" }}> /&gt;</span>
@@ -1011,13 +894,14 @@ export default function Portfolio() {
         <div style={{ display: "flex", gap: 20 }}>
           {[
             { label: "GitHub", href: "https://github.com/trxshx14" },
-            { label: "Instagram", href: "#" },
-            { label: "LinkedIn", href: "#" },
+            { label: "LinkedIn", href: "https://www.linkedin.com/in/trisha-raye-cararag/" },
+            { label: "Email", href: "mailto:cararagtrisharaye@gmail.com" },
           ].map(s => (
             <a key={s.label} href={s.href} target="_blank" rel="noreferrer" style={{ fontSize: 12, color: "#6B5F80", cursor: "pointer", transition: "color 0.2s", textDecoration: "none" }} onMouseEnter={e => e.target.style.color = "#E2A4C4"} onMouseLeave={e => e.target.style.color = "#6B5F80"}>{s.label}</a>
           ))}
         </div>
       </footer>
     </div>
+    
   );
 }
