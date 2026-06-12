@@ -30,6 +30,25 @@ const WORKS = [
     demo: "https://attendme-frontend.onrender.com/login",
     apk: "/AttendMe.apk",
   },
+  {
+    title: "Cozy Pomodoro",
+    type: "Full-Stack App",
+    icon: (color) => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="13" r="8"/>
+    <path d="M12 9v4l2.5 2.5"/>
+    <path d="M9 3h6"/>
+    <path d="M12 3v2"/>
+  </svg>
+),
+    role: "Frontend Developer",
+    problem: "Many students and professionals struggle with distractions, poor time management, and burnout during study or work sessions.",
+    desc: "Cozy productivity-focused Pomodoro timer built with React, Tailwind CSS, and Lucide React icons, featuring a soft pastel lofi-inspired interface for focused work and mindful breaks.",
+    tags: ["React", "Tailwind CSS",],
+    accent: "#E2A4C4",
+    github: "https://github.com/trxshx14/CozyPomodoro.git",
+    demo: "https://cozypomodoro-by-trishadev.vercel.app/",
+  },
 ];
 
 const STACK = [
