@@ -84,7 +84,7 @@ function ChallengeCard({ challenge, solution }) {
       }}
     >
       <div style={{ fontSize: 13, fontWeight: 700, color: TEXT, marginBottom: 8 }}>
-        <span style={{ color: "#FAC775" }}>⚡ Challenge · </span>
+        <span style={{ color: "#FAC775" }}> Challenge · </span>
         {challenge}
       </div>
       <div style={{ fontSize: 13, color: MUTED, lineHeight: 1.7 }}>
@@ -172,7 +172,7 @@ export default function AttendMeCaseStudy() {
                 backgroundClip: "text",
               }}
             >
-              Attendance, reimagined
+              Attendance, designed
             </span>{" "}
             for schools
           </h1>
@@ -183,15 +183,21 @@ export default function AttendMeCaseStudy() {
           <div style={{ marginBottom: 18 }}>
             <StatusPill color={PINK}>UI/UX Designer</StatusPill>
             <StatusPill color={PINK}>Frontend Developer</StatusPill>
+            <StatusPill color={PINK}>Backend Developer</StatusPill>
+            <StatusPill color={PINK}>Mobile Developer</StatusPill>
             <StatusPill color={PINK}>Database Designer</StatusPill>
           </div>
-          <div>
-            <StatusPill color="#61DAFB">React</StatusPill>
-            <StatusPill color="#5DCAA5">Spring Boot</StatusPill>
-            <StatusPill color="#FAC775">MySQL · Supabase</StatusPill>
-            <StatusPill color="#54C5F8">Android · Kotlin</StatusPill>
-          </div>
-          <ImageSlot label="Hero shot — admin dashboard on desktop with teacher roster on a phone beside it" height={300} />
+          <img
+  src="/images/attendme-dashboard.png"
+  alt="AttendMe admin dashboard"
+  style={{
+    width: "100%",
+    borderRadius: 14,
+    border: "1px solid rgba(226,164,196,0.15)",
+    margin: "8px 0 22px",
+    display: "block",
+  }}
+/>
         </div>
 
         {/* ---------- 1. overview ---------- */}
@@ -215,7 +221,7 @@ export default function AttendMeCaseStudy() {
             handwritten marks can be lost or altered without a trace.
           </P>
           <P>
-            <Highlight>The core question:</Highlight> how might we make recording attendance fast enough to happen mid-class,
+            <Highlight>The core question:</Highlight> How might we make recording attendance fast enough to happen mid-class,
             while giving administrators trustworthy, real-time data they can act on?
           </P>
         </Section>
@@ -240,14 +246,14 @@ export default function AttendMeCaseStudy() {
           <H2>Two users, two very different contexts.</H2>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 8 }}>
             <div style={{ background: "rgba(30,24,51,0.5)", border: "1px solid rgba(226,164,196,0.12)", borderRadius: 14, padding: 18 }}>
-              <div style={{ fontSize: 14, fontWeight: 700, color: TEXT, marginBottom: 6 }}>👩‍🏫 Teachers</div>
+              <div style={{ fontSize: 14, fontWeight: 700, color: TEXT, marginBottom: 6 }}> Teachers</div>
               <div style={{ fontSize: 12.5, color: MUTED, lineHeight: 1.7 }}>
                 Recording attendance at the start of class, often on a phone, under time pressure. They need speed, minimal
                 taps, and quick corrections.
               </div>
             </div>
             <div style={{ background: "rgba(30,24,51,0.5)", border: "1px solid rgba(226,164,196,0.12)", borderRadius: 14, padding: 18 }}>
-              <div style={{ fontSize: 14, fontWeight: 700, color: TEXT, marginBottom: 6 }}>🗂 Administrators</div>
+              <div style={{ fontSize: 14, fontWeight: 700, color: TEXT, marginBottom: 6 }}> Administrators</div>
               <div style={{ fontSize: 12.5, color: MUTED, lineHeight: 1.7 }}>
                 Reviewing attendance across sections from a desktop. They need trends, exception flags, exportable reports,
                 and user management.
@@ -301,24 +307,46 @@ export default function AttendMeCaseStudy() {
             ]}
           />
           <P>
-            A competitive scan showed most existing tools were either bloated school ERPs or overly simple binary check-in apps —
+            A competitive scan showed most existing tools were either bloated school ERPs or overly simple binary check-in apps,
             confirming a gap for a focused, role-aware system.
           </P>
-          <ImageSlot label="Research artifacts — interview notes, affinity map, or competitor comparison" height={180} />
+          <img
+  src="/images/attendme-research.png"
+  alt="Research findings and competitive analysis"
+  loading="lazy"
+  style={{
+    width: "100%",
+    borderRadius: 14,
+    border: "1px solid rgba(226,164,196,0.15)",
+    margin: "8px 0 22px",
+    display: "block",
+  }}
+/>
         </Section>
 
         {/* ---------- 7. user flow ---------- */}
         <Section num={7} label="User Flow">
           <H2>One login. Two diverging paths.</H2>
           <P>
-            <Highlight>Teacher (happy path):</Highlight> Login → Dashboard → Select class session → roster loads with everyone
+            <Highlight>Teacher:</Highlight> Login → Dashboard → Select class session → roster loads with everyone
             defaulted to <em>Present</em> → tap exceptions (Absent / Late / Excused) → Save → confirmation with summary count.
           </P>
           <P>
             <Highlight>Administrator:</Highlight> Login → Admin Dashboard → school-wide analytics → drill into a section or
             student → export report → manage users (create teacher accounts, assign sections).
           </P>
-          <ImageSlot label="User flow diagram — one lane per role, showing the RBAC split after login" height={200} />
+          <img
+  src="/images/attendme_user_flow.png"
+  alt="AttendMe user flow diagram for Teacher and Admin"
+  loading="lazy"
+  style={{
+    width: "100%",
+    borderRadius: 14,
+    border: "1px solid rgba(226,164,196,0.15)",
+    margin: "8px 0 22px",
+    display: "block",
+  }}
+/>
         </Section>
 
         {/* ---------- 8. design process ---------- */}
@@ -326,9 +354,9 @@ export default function AttendMeCaseStudy() {
           <H2>Empathize → Define → Ideate → Prototype → Test → Iterate.</H2>
           <Bullets
             items={[
-              "Lo-fi sketches explored roster layouts — list vs. grid vs. card-per-student. Paper testing showed a dense list with large tap targets won for speed.",
-              "Mid-fi Figma wireframes locked the information architecture: teacher screens mobile-first for one-handed use; admin screens desktop-dense.",
-              "The hi-fi prototype validated the exception-marking pattern — testers recorded a 30-student class in well under a minute.",
+              "Lo-fi sketches explored roster layouts, list vs. grid vs. card-per-student. Paper testing showed a dense list with large tap targets won for speed.",
+              "Figma wireframes locked the information architecture: teacher screens mobile-first for one-handed use; admin screens desktop-dense.",
+              "The hi-fi prototype validated the exception-marking pattern, testers recorded a 30-student class in well under a minute.",
               "Each iteration was tested with users role-playing as teachers; friction points like accidental status toggles were fixed before development.",
             ]}
           />
@@ -344,9 +372,42 @@ export default function AttendMeCaseStudy() {
               "Admin dashboard leads with exceptions (\"students below 80% attendance\") instead of raw totals — matching how admins actually triage.",
             ]}
           />
-          <ImageSlot label="Lo-fi sketches — roster layout explorations" height={170} />
-          <ImageSlot label="Mid-fi Figma — teacher mobile flow: login, class select, roster, confirmation" height={220} />
-          <ImageSlot label="Mid-fi Figma — admin desktop: dashboard, reports, user management" height={220} />
+          <img
+  src="/images/attendme-lofi.png"
+  alt="AttendMe teacher dashboard"
+  loading="lazy"
+  style={{
+    width: "100%",
+    borderRadius: 14,
+    border: "1px solid rgba(226,164,196,0.15)",
+    margin: "8px 0 22px",
+    display: "block",
+  }}
+/>
+          <img
+  src="/images/attendme-midfi-teacher.png"
+  alt="AttendMe teacher dashboard"
+  loading="lazy"
+  style={{
+    width: "100%",
+    borderRadius: 14,
+    border: "1px solid rgba(226,164,196,0.15)",
+    margin: "8px 0 22px",
+    display: "block",
+  }}
+/>
+          <img
+  src="/images/attendme-dashboard.png"
+  alt="AttendMe admin dashboard"
+  loading="lazy"
+  style={{
+    width: "100%",
+    borderRadius: 14,
+    border: "1px solid rgba(226,164,196,0.15)",
+    margin: "8px 0 22px",
+    display: "block",
+  }}
+/>
         </Section>
 
         {/* ---------- 10. visual design ---------- */}
@@ -367,7 +428,18 @@ export default function AttendMeCaseStudy() {
               "Empty, loading, and error states designed deliberately: a roster that fails to load tells the teacher what to do next, not just a spinner.",
             ]}
           />
-          <ImageSlot label="Style guide / component sheet from Figma" height={200} />
+          <img
+  src="/images/attendme-styleguide.png"
+  alt="AttendMe style guide"
+  loading="lazy"
+  style={{
+    width: "100%",
+    borderRadius: 14,
+    border: "1px solid rgba(226,164,196,0.15)",
+    margin: "8px 0 22px",
+    display: "block",
+  }}
+/>
         </Section>
 
         {/* ---------- 11. key features ---------- */}
@@ -384,7 +456,18 @@ export default function AttendMeCaseStudy() {
               <span key="7"><Highlight>Report Export</Highlight> — downloadable reports for offline distribution and record-keeping.</span>,
             ]}
           />
-          <ImageSlot label="Feature screenshots — roster recording, history view, analytics dashboard, export dialog" height={260} />
+          <img
+  src="/images/attendme-teacher.png"
+  alt="AttendMe user flow diagram for Teacher"
+  loading="lazy"
+  style={{
+    width: "100%",
+    borderRadius: 14,
+    border: "1px solid rgba(226,164,196,0.15)",
+    margin: "8px 0 22px",
+    display: "block",
+  }}
+/>
         </Section>
 
         {/* ---------- 12. development ---------- */}
@@ -432,7 +515,18 @@ export default function AttendMeCaseStudy() {
               "Performance on school networks: lean payloads and skeleton loading states keep the app usable on slow campus Wi-Fi.",
             ]}
           />
-          <ImageSlot label="Same screen at mobile / tablet / desktop breakpoints" height={190} />
+          <img
+  src="/images/attendme-responsive.png"
+  alt="AttendMe responsive design"
+  loading="lazy"
+  style={{
+    width: "100%",
+    borderRadius: 14,
+    border: "1px solid rgba(226,164,196,0.15)",
+    margin: "8px 0 22px",
+    display: "block",
+  }}
+/>
         </Section>
 
         {/* ---------- 15. results ---------- */}
