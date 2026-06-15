@@ -51,6 +51,7 @@ const WORKS = [
     accent: "#E2A4C4",
     github: "https://github.com/trxshx14/CozyPomodoro.git",
     demo: "https://cozypomodoro-by-trishadev.vercel.app/",
+    caseStudy: "/cozy-pomodoro-case-study",
   },
 ];
 
