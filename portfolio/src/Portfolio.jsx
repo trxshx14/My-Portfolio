@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import HeroBackground from "./HeroBackground";
+import PortfolioChat from "./PortfolioChat";
 
 
 
@@ -967,6 +968,7 @@ export default function Portfolio() {
           ))}
         </div>
       </footer>
+      <PortfolioChat />
     </div>
     
   );
