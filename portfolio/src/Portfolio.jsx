@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
+import HeroBackground from "./HeroBackground";
 
 
 
@@ -512,7 +513,7 @@ export default function Portfolio() {
 
       {/* ─── HERO ─── */}
       <section id="home" ref={heroRef} style={{ minHeight: "100vh", display: "flex", alignItems: "center", padding: "100px 60px 60px", position: "relative", zIndex: 1 }}>
-
+      <HeroBackground />
         
         <div className="hero-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 60, alignItems: "center", width: "100%", maxWidth: 1200, margin: "0 auto" }}>
 
@@ -603,7 +604,7 @@ export default function Portfolio() {
                 A builder who <span className="gradient-text">designs</span> and a designer who <span className="gradient-text">ships.</span>
               </h2>
               <p style={{ fontSize: 14, color: "#9A8DB0", lineHeight: 1.8, marginBottom: 16 }}>
-                I'm a 4th-year IT student in the Philippines, specializing in building full-stack web and mobile applications. I care deeply about both clean code and thoughtful UX — the rare T-shaped skillset that bridges design and engineering.
+                I'm a 4th-year IT student in the Philippines, specializing in building full-stack web and mobile applications. I care deeply about both clean code and thoughtful UX, the rare T-shaped skillset that bridges design and engineering.
               </p>
               <p style={{ fontSize: 14, color: "#9A8DB0", lineHeight: 1.8, marginBottom: 28 }}>
                 Whether it's architecting a Spring Boot REST API or crafting pixel-perfect Figma prototypes, I bring the same level of intentionality to both. Currently looking for internship opportunities where I can contribute and grow.
