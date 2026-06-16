@@ -2,20 +2,14 @@ import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 
 
-const NAV_LINKS = ["Home", "About", "Works", "Experience", "Tech Stack", "Contact"];
 
-const TECH_NODES = [
-  { label: "React", x: 72, y: 18, size: 38, color: "#61DAFB", glow: "#61DAFB40" },
-  { label: "Figma", x: 20, y: 42, size: 34, color: "#E2A4C4", glow: "#E2A4C440" },
-  { label: "Spring", x: 68, y: 62, size: 30, color: "#9A6B8A", glow: "#9A6B8A50" },
-  { label: "Next.js", x: 38, y: 75, size: 28, color: "#C8B8D8", glow: "#C8B8D840" },
-  { label: "TS", x: 15, y: 20, size: 26, color: "#3178C6", glow: "#3178C640" },
-  { label: "Kotlin", x: 82, y: 40, size: 24, color: "#54C5F8", glow: "#54C5F840" },
-];
+const NAV_LINKS = ["Home", "About", "Works", "Experience", "Services", "Contact"];
+
 
 const WORKS = [
   {
     title: "AttendMe",
+    image: "/attendme-preview.png",
     type: "Full-Stack App",
     icon: (color) => (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -35,6 +29,7 @@ const WORKS = [
   },
   {
     title: "Cozy Pomodoro",
+    image: "/cozy-pomodoro-preview.png",
     type: "Full-Stack App",
     icon: (color) => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -143,31 +138,6 @@ const EXPERIENCE = [
   },
 ];
 
-function FloatingNode({ node, index }) {
-  const style = {
-    position: "absolute",
-    left: `${node.x}%`,
-    top: `${node.y}%`,
-    width: node.size,
-    height: node.size,
-    borderRadius: "50%",
-    background: `radial-gradient(circle at 35% 35%, ${node.color}33, ${node.color}11)`,
-    border: `1px solid ${node.color}55`,
-    boxShadow: `0 0 ${node.size * 0.6}px ${node.glow}, inset 0 0 ${node.size * 0.3}px ${node.color}22`,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    fontSize: node.size < 30 ? 8 : 9,
-    fontWeight: 600,
-    color: node.color,
-    letterSpacing: "0.04em",
-    animation: `floatNode${index % 3} ${3.5 + index * 0.4}s ease-in-out infinite`,
-    cursor: "default",
-    transition: "transform 0.3s ease",
-    zIndex: 2,
-  };
-  return <div style={style}>{node.label}</div>;
-}
 
 export default function Portfolio() {
   const [activeNav, setActiveNav] = useState("Home");
@@ -542,42 +512,30 @@ export default function Portfolio() {
 
       {/* ─── HERO ─── */}
       <section id="home" ref={heroRef} style={{ minHeight: "100vh", display: "flex", alignItems: "center", padding: "100px 60px 60px", position: "relative", zIndex: 1 }}>
+
+        
         <div className="hero-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 60, alignItems: "center", width: "100%", maxWidth: 1200, margin: "0 auto" }}>
 
           <div style={{ animation: "fadeUp 0.7s ease both" }}>
-            <div className="availability-badge">
-              <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#5DCAA5", display: "inline-block", animation: "statusPulse 2s ease-in-out infinite" }} />
-              Open to internships & freelance · 2026
-            </div>
-
-            <div className="hero-eyebrow">
-              <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#E2A4C4", display: "inline-block", boxShadow: "0 0 8px #E2A4C4" }} />
-              IT Student · UX/UI Designer · Builder
-            </div>
-
             <h1 style={{ fontSize: 58, fontWeight: 800, lineHeight: 1.05, marginBottom: 18, letterSpacing: "-0.02em", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
               <span style={{ color: "#EDE8F5" }}>Hi, I am </span>
               <span className="gradient-text">Trisha</span>
             </h1>
-
             <p style={{ fontSize: 17, fontWeight: 500, color: "#C8B8D8", lineHeight: 1.65, marginBottom: 10, maxWidth: 440 }}>
               Frontend Developer & UX/UI Designer
             </p>
             <p style={{ fontSize: 13.5, color: "#9A8DB0", lineHeight: 1.75, marginBottom: 32, maxWidth: 420 }}>
               Building beautiful, scalable, and high-quality digital products — faster with AI, smarter with experience. Based in the Philippines.
             </p>
-
             <div style={{ display: "flex", gap: 10, marginBottom: 32, flexWrap: "wrap" }}>
               {["Web", "Mobile", "UI/UX"].map(t => (
                 <span key={t} className="tag-pill">{t}</span>
               ))}
             </div>
-
             <div style={{ display: "flex", gap: 14, marginBottom: 48, flexWrap: "wrap" }}>
               <button className="pill-btn" style={{ padding: "12px 28px", fontSize: 14 }} onClick={() => scrollToSection("Works")}>View My Work ↓</button>
               <a href="mailto:cararagtrisharaye@gmail.com" className="pill-outline" style={{ padding: "12px 28px", fontSize: 14 }}>Let's Create Something</a>
             </div>
-
             <div style={{ display: "flex", gap: 40 }}>
               {[["3+", "Projects Shipped"], ["2", "Years Designing"], ["∞", "Iterations"]].map(([n, l]) => (
                 <div key={l} className="stat-block">
@@ -589,20 +547,31 @@ export default function Portfolio() {
           </div>
 
           <div style={{ position: "relative", height: 460, animation: "fadeUp 0.9s ease 0.15s both" }}>
-            <div className="orbit-ring" style={{ width: 280, height: 280 }} />
-            <div className="orbit-ring" style={{ width: 380, height: 380 }} />
+            {/* Orbit rings */}
+            <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: 380, height: 380, borderRadius: "50%", border: "1px dashed rgba(226,164,196,0.15)" }} />
+            <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: 480, height: 480, borderRadius: "50%", border: "1px dashed rgba(226,164,196,0.08)" }} />
 
-            <div className="glass-card" style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: 200, height: 200, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 10, zIndex: 3 }}>
-              <div style={{ width: 56, height: 56, borderRadius: "50%", background: "linear-gradient(135deg, #E2A4C4, #9A6B8A)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, fontWeight: 700, color: "white", marginBottom: 4 }}>TR</div>
-              <div style={{ fontSize: 11, fontWeight: 600, color: "#9A6B8A", letterSpacing: "0.12em", textTransform: "uppercase" }}>Trisha Raye</div>
-              <div style={{ width: 40, height: 1, background: "linear-gradient(90deg, transparent, #E2A4C460, transparent)" }} />
-              <div style={{ fontSize: 10, color: "#9A8DB0" }}>Full-Stack · UI/UX</div>
+            {/* Big circular photo */}
+            <div style={{
+              position: "absolute", top: "50%", left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: 320, height: 320, borderRadius: "50%",
+              overflow: "hidden",
+              border: "3px solid rgba(226,164,196,0.35)",
+              boxShadow: "0 0 60px rgba(226,164,196,0.2), 0 0 120px rgba(154,107,138,0.15)",
+              zIndex: 3,
+            }}>
+              <img
+                src="/Trisha-profile.jpg"
+                alt="Trisha Raye"
+                style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center top" }}
+              />
             </div>
 
-            {TECH_NODES.map((node, i) => (
-              <FloatingNode key={node.label} node={node} index={i} />
-            ))}
+            {/* Floating tech nodes */}
+            
 
+            {/* Available Now badge */}
             <div style={{ position: "absolute", bottom: 20, right: 20, background: "rgba(226,164,196,0.08)", border: "1px solid rgba(226,164,196,0.15)", borderRadius: 12, padding: "10px 16px", display: "flex", alignItems: "center", gap: 10, backdropFilter: "blur(8px)" }}>
               <div style={{ width: 28, height: 28, borderRadius: "50%", background: "linear-gradient(135deg, #5DCAA5, #0F6E56)", display: "flex", alignItems: "center", justifyContent: "center" }}>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -615,6 +584,7 @@ export default function Portfolio() {
               </div>
             </div>
           </div>
+
         </div>
 
         <div style={{ position: "absolute", bottom: 36, left: "50%", transform: "translateX(-50%)", display: "flex", flexDirection: "column", alignItems: "center", gap: 8, color: "#6B5F80", fontSize: 11, letterSpacing: "0.12em", textTransform: "uppercase" }}>
@@ -687,6 +657,8 @@ export default function Portfolio() {
     <div className="works-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20 }}>
       {WORKS.map((w) => (
         <div key={w.title} className="glass-card work-card" style={{ padding: 28, display: "flex", flexDirection: "column" }}>
+
+        
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16 }}>
             <div style={{ width: 44, height: 44, borderRadius: 12, background: `${w.accent}18`, border: `1px solid ${w.accent}30`, display: "flex", alignItems: "center", justifyContent: "center" }}>
               {w.icon(w.accent)}
@@ -773,37 +745,102 @@ export default function Portfolio() {
         </div>
       </section>
 
-      {/* ─── TECH STACK ─── */}
-      <section id="tech stack" style={{ padding: "60px 60px 80px", position: "relative", zIndex: 1 }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-          <span className="section-label">Tech Stack</span>
-          <h2 style={{ fontSize: 36, fontWeight: 800, color: "#EDE8F5", letterSpacing: "-0.02em", marginBottom: 8, fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
-            Tools I <span className="gradient-text">Work With</span>
-          </h2>
-          <p style={{ fontSize: 13, color: "#9A8DB0", marginBottom: 40 }}>
-            <span style={{ color: "#5DCAA5" }}>● Shipped</span> = used in production projects &nbsp;·&nbsp; <span style={{ color: "#FAC775" }}>● Learning</span> = actively studying
-          </p>
+      {/* ─── SERVICES + TECH STACK ─── */}
+<section id="services" style={{ padding: "60px 60px 80px", position: "relative", zIndex: 1 }}>
+  <div style={{ maxWidth: 1200, margin: "0 auto" }}>
+    
+    {/* Header */}
+    <span className="section-label">Services & Stack</span>
+    <h2 style={{ fontSize: 40, fontWeight: 800, color: "#EDE8F5", letterSpacing: "-0.02em", marginBottom: 8, fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+      What I can <span className="gradient-text">do for you.</span>
+    </h2>
+    <p style={{ fontSize: 14, color: "#9A8DB0", lineHeight: 1.7, marginBottom: 48, maxWidth: 500 }}>
+      Student-built, but seriously considered. Every service reflects real skills practiced through coursework and personal projects.
+    </p>
 
-          <div className="stack-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 24 }}>
-            {STACK.map(s => (
-              <div key={s.cat} className="glass-card" style={{ padding: 24 }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
-                  {s.icon}
-                  <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "#E2A4C4" }}>{s.cat}</div>
-                </div>
-                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                  {s.items.map(item => (
-                    <div key={item.name} className="stack-item">
-                      <span>{item.name}</span>
-                      <span className={item.level === "Shipped" ? "stack-badge-shipped" : "stack-badge-learning"}>{item.level}</span>
-                    </div>
-                  ))}
-                </div>
+    {/* Service Cards */}
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20, marginBottom: 48 }}>
+      {[
+        {
+          num: "01",
+          icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E2A4C4" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>,
+          title: "UI/UX Design",
+          sub: "Interfaces that make sense.",
+          desc: "I design clean, user-centered interfaces using Figma, from wireframes and user flows to polished high-fidelity mockups. Every layout decision is grounded in usability, not just aesthetics.",
+          bullets: ["Wireframes", "Case Studies", "User Flows", "Figma Prototypes"],
+        },
+        {
+          num: "02",
+          icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E2A4C4" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>,
+          title: "Frontend Development",
+          sub: "Designs turned into real code.",
+          desc: "I build responsive, accessible interfaces using React, JavaScript, HTML, and CSS. I focus on writing clean, maintainable code that accurately translates design into working components.",
+          bullets: ["React Components", "Responsive Layouts", "CSS Animations", "Clean Codebase"],
+        },
+        {
+          num: "03",
+          icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E2A4C4" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>,
+          title: "Full-Stack Development",
+          sub: "End-to-end web solutions.",
+          desc: "I build complete web applications with Spring Boot REST APIs and MySQL on the backend, paired with React on the frontend, role-based systems, dashboards, and more.",
+          bullets: ["Spring Boot APIs", "MySQL Databases", "REST Architecture", "Role-Based Access"],
+        },
+      ].map((s) => (
+        <div key={s.num} className="glass-card" style={{ padding: 28, display: "flex", flexDirection: "column", gap: 0 }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 20 }}>
+            <div style={{ width: 44, height: 44, borderRadius: 12, background: "rgba(226,164,196,0.08)", border: "1px solid rgba(226,164,196,0.2)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              {s.icon}
+            </div>
+            <span style={{ fontSize: 13, fontWeight: 700, color: "rgba(226,164,196,0.25)", fontFamily: "monospace" }}>{s.num}</span>
+          </div>
+
+          <h3 style={{ fontSize: 18, fontWeight: 700, color: "#EDE8F5", marginBottom: 4 }}>{s.title}</h3>
+          <p style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", color: "#E2A4C4", marginBottom: 16 }}>{s.sub}</p>
+          <div style={{ width: "100%", height: 1, background: "rgba(226,164,196,0.1)", marginBottom: 16 }} />
+          <p style={{ fontSize: 13, color: "#9A8DB0", lineHeight: 1.7, marginBottom: 20, flex: 1 }}>{s.desc}</p>
+
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            {s.bullets.map(b => (
+              <div key={b} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <div style={{ width: 4, height: 4, borderRadius: "50%", background: "#E2A4C4", flexShrink: 0 }} />
+                <span style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "#9A8DB0" }}>{b}</span>
               </div>
             ))}
           </div>
         </div>
-      </section>
+      ))}
+    </div>
+
+    {/* Tech Stack below */}
+    <div style={{ borderTop: "1px solid rgba(226,164,196,0.08)", paddingTop: 48 }}>
+      <p style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.18em", textTransform: "uppercase", color: "#9A8DB0", marginBottom: 24 }}>
+        Tools & Technologies
+      </p>
+      <p style={{ fontSize: 13, color: "#9A8DB0", marginBottom: 28 }}>
+        <span style={{ color: "#5DCAA5" }}>● Shipped</span> = used in production projects &nbsp;·&nbsp; <span style={{ color: "#FAC775" }}>● Learning</span> = actively studying
+      </p>
+      <div className="stack-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 20 }}>
+        {STACK.map(s => (
+          <div key={s.cat} className="glass-card" style={{ padding: 20 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
+              {s.icon}
+              <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "#E2A4C4" }}>{s.cat}</div>
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              {s.items.map(item => (
+                <div key={item.name} className="stack-item">
+                  <span>{item.name}</span>
+                  <span className={item.level === "Shipped" ? "stack-badge-shipped" : "stack-badge-learning"}>{item.level}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+  </div>
+</section>
 
       {/* ─── CERTIFICATIONS ─── */}
 <section id="certifications" style={{ padding: "0 60px 80px", position: "relative", zIndex: 1 }}>
