@@ -118,7 +118,7 @@ const EXPERIENCE = [
     type: "project",
   },
   {
-    year: "2024 - 2027",
+    year: "2024 - 2026",
     role: "BS Information Technology",
     org: "Cebu Institute of Technology University · Cebu, Philippines · 4th Year",
     desc: "Studying full-stack development, UI/UX design, and software engineering principles.",
@@ -605,10 +605,10 @@ export default function Portfolio() {
                 A builder who <span className="gradient-text">designs</span> and a designer who <span className="gradient-text">ships.</span>
               </h2>
               <p style={{ fontSize: 14, color: "#9A8DB0", lineHeight: 1.8, marginBottom: 16 }}>
-                I'm a 4th-year IT student in the Philippines, specializing in building full-stack web and mobile applications. I care deeply about both clean code and thoughtful UX, the rare T-shaped skillset that bridges design and engineering.
+                I’m a Frontend Developer & UX/UI Designer in the Philippines, specializing in building responsive web and mobile applications. I care deeply about both clean code and thoughtful UX—blending visual design with frontend development to create intuitive digital experiences.
               </p>
               <p style={{ fontSize: 14, color: "#9A8DB0", lineHeight: 1.8, marginBottom: 28 }}>
-                Whether it's architecting a Spring Boot REST API or crafting pixel-perfect Figma prototypes, I bring the same level of intentionality to both. Currently looking for internship opportunities where I can contribute and grow.
+                Whether it's architecting a Spring Boot REST API or crafting pixel-perfect Figma prototypes, I bring the same level of intentionality to both. Currently looking for freelance opportunities where I can contribute and grow.
               </p>
               <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
                 <a href="mailto:cararagtrisharaye@gmail.com" className="pill-btn" style={{ padding: "10px 20px", fontSize: 13 }}>✉ Email Me</a>
@@ -626,7 +626,7 @@ export default function Portfolio() {
                   iconSvg: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E2A4C4" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
                 },
                 {
-                  label: "Education", value: "BS Information Technology · 4th Year",
+                  label: "Education", value: "Graduate in BS Information Technology",
                   iconSvg: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E2A4C4" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
                 },
                 {
@@ -887,7 +887,7 @@ export default function Portfolio() {
             Let's build something <span className="gradient-text">together</span>
           </h2>
           <p style={{ fontSize: 14, color: "#9A8DB0", marginBottom: 48, lineHeight: 1.7 }}>
-            Open for internships, freelance projects, and collaborations. Pick whatever works best for you — I respond within 24 hours.
+            Open for freelance projects, and collaborations. Pick whatever works best for you — I respond within 24 hours.
           </p>
 
           <div style={{ display: "flex", flexDirection: "column", gap: 14, marginBottom: 40 }}>
@@ -945,10 +945,7 @@ export default function Portfolio() {
           </div>
 
           {/* Availability pill */}
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(93,202,165,0.06)", border: "1px solid rgba(93,202,165,0.2)", borderRadius: 100, padding: "8px 18px", fontSize: 12, color: "#5DCAA5", fontWeight: 500 }}>
-            <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#5DCAA5", display: "inline-block", animation: "statusPulse 2s ease-in-out infinite" }} />
-            Available for internships & freelance · 2026
-          </div>
+          
         </div>
       </section>
 
