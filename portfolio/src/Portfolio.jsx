@@ -527,7 +527,7 @@ export default function Portfolio() {
               Frontend Developer & UX/UI Designer
             </p>
             <p style={{ fontSize: 13.5, color: "#9A8DB0", lineHeight: 1.75, marginBottom: 32, maxWidth: 420 }}>
-              Building beautiful, scalable, and high-quality digital products — faster with AI, smarter with experience. Based in the Philippines.
+              Building beautiful, scalable, and high-quality digital products, faster with AI, smarter with experience. Based in the Philippines.
             </p>
             <div style={{ display: "flex", gap: 10, marginBottom: 32, flexWrap: "wrap" }}>
               {["Web", "Mobile", "UI/UX"].map(t => (
@@ -618,7 +618,7 @@ export default function Portfolio() {
             <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
               {[
                 {
-                  label: "Current Focus", value: "Internship · Freelance · Side Projects",
+                  label: "Current Focus", value: "Freelance · Side Projects",
                   iconSvg: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E2A4C4" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
                 },
                 {
