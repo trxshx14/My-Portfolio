@@ -1,93 +1,72 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import HeroBackground from "./HeroBackground";
 import PortfolioChat from "./PortfolioChat";
 
-
-
 const NAV_LINKS = ["Home", "About", "Works", "Experience", "Services", "Contact"];
-
 
 const WORKS = [
   {
     title: "AttendMe",
-    image: "/attendme-preview.png",
     type: "Full-Stack App",
-    icon: (color) => (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
-      </svg>
-    ),
     role: "Full-Stack Developer",
+    year: "2026",
+    pipeline: "Figma → React + Spring Boot → Render",
     problem: "Manual attendance tracking is error-prone and time-consuming for instructors.",
     desc: "Attendance management system with REST API architecture and role-based access control for school admins and teachers.",
     tags: ["React", "Spring Boot", "MySQL", "Android"],
-    accent: "#E2A4C4",
-    github: "https://github.com/trxshx14/IT342-Cararag-AttendMe.git",
+    github: "https://github.com/trxshx14/IT342-Cararag-AttendMe",
     demo: "https://attendme-frontend.onrender.com/login",
     apk: "/AttendMe.apk",
     caseStudy: "/attendme-case-study",
-    
   },
   {
     title: "Cozy Pomodoro",
-    image: "/cozy-pomodoro-preview.png",
-    type: "Full-Stack App",
-    icon: (color) => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-    <circle cx="12" cy="13" r="8"/>
-    <path d="M12 9v4l2.5 2.5"/>
-    <path d="M9 3h6"/>
-    <path d="M12 3v2"/>
-  </svg>
-),
-    role: "Frontend Developer",
-    problem: "Many students and professionals struggle with distractions, poor time management, and burnout during study or work sessions.",
-    desc: "Cozy productivity-focused Pomodoro timer built with React, Tailwind CSS, and Lucide React icons, featuring a soft pastel lofi-inspired interface for focused work and mindful breaks.",
-    tags: ["React", "Tailwind CSS",],
-    accent: "#E2A4C4",
-    github: "https://github.com/trxshx14/CozyPomodoro.git",
+    type: "Frontend App",
+    role: "Frontend Developer & Designer",
+    year: "2025",
+    pipeline: "Figma → React + Tailwind → Vercel",
+    problem: "Students and professionals struggle with distraction and burnout during long study or work sessions.",
+    desc: "Productivity-focused Pomodoro timer with a soft, lofi-inspired interface designed for focused work and mindful breaks.",
+    tags: ["React", "Tailwind CSS"],
+    github: "https://github.com/trxshx14/CozyPomodoro",
     demo: "https://cozypomodoro-by-trishadev.vercel.app/",
     caseStudy: "/cozy-pomodoro-case-study",
+  },
+  {
+    title: "GlossFile",
+    type: "Mobile App",
+    role: "Android Developer & Designer",
+    year: "2025",
+    pipeline: "Figma → Kotlin + Firebase → Android",
+    problem: "Beauty products expire quietly — most people have no easy way to track what's still safe to use.",
+    desc: "Native Android app for tracking product expiration dates, building custom palettes, and organizing a beauty routine.",
+    tags: ["Kotlin", "Firebase", "Android Studio"],
+    github: "https://github.com/trxshx14/GlossFile",
   },
 ];
 
 const STACK = [
   {
     cat: "Frontend",
-    icon: (
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#E2A4C4" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <polyline points="9 18 15 12 9 6"/>
-      </svg>
-    ),
     items: [
       { name: "React", level: "Shipped" },
-      { name: "HTML + CSS", level: "Shipped" },
       { name: "JavaScript", level: "Shipped" },
+      { name: "HTML + CSS", level: "Shipped" },
       { name: "Tailwind CSS", level: "Shipped" },
+      { name: "TypeScript", level: "Learning" },
     ],
   },
   {
     cat: "Backend",
-    icon: (
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#E2A4C4" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
-      </svg>
-    ),
     items: [
       { name: "Spring Boot", level: "Shipped" },
-      { name: "Supabase", level: "Shipped" },
       { name: "REST API", level: "Shipped" },
       { name: "MySQL", level: "Shipped" },
+      { name: "Supabase", level: "Shipped" },
     ],
   },
   {
     cat: "Mobile",
-    icon: (
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#E2A4C4" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/>
-      </svg>
-    ),
     items: [
       { name: "Kotlin", level: "Shipped" },
       { name: "Android Studio", level: "Shipped" },
@@ -96,11 +75,6 @@ const STACK = [
   },
   {
     cat: "Design",
-    icon: (
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#E2A4C4" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/>
-      </svg>
-    ),
     items: [
       { name: "Figma", level: "Shipped" },
       { name: "Prototyping", level: "Shipped" },
@@ -111,862 +85,794 @@ const STACK = [
 
 const EXPERIENCE = [
   {
-    year: "2026 - Present",
+    year: "2026 — Present",
     role: "Full-Stack Developer",
     org: "AttendMe · Academic Project",
     desc: "Architected REST APIs with Spring Boot and MySQL for a role-based attendance management system.",
     type: "project",
   },
   {
-    year: "2024 - 2026",
-    role: "BS Information Technology",
-    org: "Cebu Institute of Technology University · Cebu, Philippines · 4th Year",
+    year: "2024 — 2026",
+    role: "BS Information Technology · 4th Year",
+    org: "Cebu Institute of Technology University · Cebu, Philippines",
     desc: "Studying full-stack development, UI/UX design, and software engineering principles.",
     type: "edu",
   },
   {
-    year: "2021 – 2023",
-    role: "Senior High School Graduate",
-    org: "Colegio de la Inmaculada Concepcion – Cebu",
+    year: "2021 — 2023",
+    role: "Senior High School",
+    org: "Colegio de la Inmaculada Concepcion · Cebu",
     desc: "Completed Senior High School at CIC Cebu.",
     type: "edu",
   },
   {
-    year: "2014 – 2020",
-    role: "High School Graduate",
-    org: "Colegio de la Inmaculada Concepcion – Cebu",
+    year: "2014 — 2020",
+    role: "Junior High School",
+    org: "Colegio de la Inmaculada Concepcion · Cebu",
     desc: "Completed Junior High School at CIC Cebu.",
     type: "edu",
   },
 ];
 
+const SERVICES = [
+  {
+    title: "UI/UX Design",
+    sub: "Interfaces that make sense",
+    desc: "Clean, user-centered interfaces in Figma — from wireframes and user flows to polished high-fidelity mockups. Every layout decision is grounded in usability, not just aesthetics.",
+    bullets: ["Wireframes", "User flows", "Figma prototypes", "Case studies"],
+  },
+  {
+    title: "Frontend Development",
+    sub: "Designs turned into real code",
+    desc: "Responsive, accessible interfaces in React, JavaScript, HTML, and CSS. Clean, maintainable code that translates design faithfully into working components.",
+    bullets: ["React components", "Responsive layouts", "CSS animation", "Accessibility"],
+  },
+  {
+    title: "Full-Stack Development",
+    sub: "End-to-end web solutions",
+    desc: "Complete web applications: Spring Boot REST APIs and MySQL on the backend, React on the frontend — role-based systems, dashboards, and more.",
+    bullets: ["Spring Boot APIs", "MySQL databases", "REST architecture", "Role-based access"],
+  },
+];
+
+const CERTS = [
+  { name: "AI Ready ASEAN", issuer: "ASEAN Foundation & Google.org", year: "2025" },
+  { name: "Data Visualization", issuer: "Kaggle", year: "2025" },
+  { name: "Java OOP Certification", issuer: "CodeChum · CITU", year: "2025" },
+  { name: "ICT Congress", issuer: "PSITE Cebu", year: "2026" },
+];
 
 export default function Portfolio() {
   const [activeNav, setActiveNav] = useState("Home");
   const [scrolled, setScrolled] = useState(false);
-  const [cursorPos, setCursorPos] = useState({ x: -100, y: -100 });
-  const heroRef = useRef(null);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 30);
-    window.addEventListener("scroll", onScroll);
+    window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   useEffect(() => {
-    const onMove = (e) => setCursorPos({ x: e.clientX, y: e.clientY });
-    window.addEventListener("mousemove", onMove);
-    return () => window.removeEventListener("mousemove", onMove);
-  }, []);
-
-  useEffect(() => {
-    const sectionIds = NAV_LINKS.map(link => link.toLowerCase());
-    const observerOptions = {
-      root: null,
-      rootMargin: "-40% 0px -50% 0px",
-      threshold: 0,
-    };
-    const observerCallback = (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          const matchingLink = NAV_LINKS.find(
-            (link) => link.toLowerCase() === entry.target.id
-          );
-          if (matchingLink) setActiveNav(matchingLink);
-        }
-      });
-    };
-    const observer = new IntersectionObserver(observerCallback, observerOptions);
+    const sectionIds = NAV_LINKS.map((link) => link.toLowerCase());
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const match = NAV_LINKS.find((l) => l.toLowerCase() === entry.target.id);
+            if (match) setActiveNav(match);
+          }
+        });
+      },
+      { root: null, rootMargin: "-40% 0px -50% 0px", threshold: 0 }
+    );
     sectionIds.forEach((id) => {
       const el = document.getElementById(id);
       if (el) observer.observe(el);
     });
-    return () => {
-      sectionIds.forEach((id) => {
-        const el = document.getElementById(id);
-        if (el) observer.unobserve(el);
-      });
-    };
+    return () => observer.disconnect();
   }, []);
+
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [menuOpen]);
 
   const scrollToSection = (id) => {
     const el = document.getElementById(id.toLowerCase());
     if (el) el.scrollIntoView({ behavior: "smooth" });
     setActiveNav(id);
+    setMenuOpen(false);
   };
 
   return (
-    <div style={{ fontFamily: "'Inter', 'Plus Jakarta Sans', system-ui, sans-serif", background: "#0F0C1B", color: "#EDE8F5", minHeight: "100vh", overflowX: "hidden", width: "100%" }}>
+    <div className="site">
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Outfit:wght@300..700&family=JetBrains+Mono:wght@400;500&display=swap');
 
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        html, body, #root {
-          width: 100%;
-          margin: 0;
-          padding: 0;
-          background: #0F0C1B;
-        }
-
         :root {
-          --plum: #0F0C1B;
-          --plum2: #17122A;
-          --plum3: #1E1833;
+          --ink: #14101F;
+          --ink-2: #1A1428;
           --pink: #E2A4C4;
-          --mauve: #9A6B8A;
+          --rose: #B36B93;
           --lavender: #C8B8D8;
-          --text: #EDE8F5;
-          --muted: #8B7FA0;
+          --text: #F0EAF7;
+          --muted: #A99DBE;
+          --faint: #7E7194;
+          --line: rgba(226, 164, 196, 0.14);
+          --line-strong: rgba(226, 164, 196, 0.32);
+          --green: #5DCAA5;
+          --amber: #FAC775;
+          --serif: 'Fraunces', Georgia, serif;
+          --sans: 'Outfit', system-ui, sans-serif;
+          --mono: 'JetBrains Mono', ui-monospace, monospace;
         }
 
-        @keyframes floatNode0 {
-          0%, 100% { transform: translateY(0px) rotate(0deg); }
-          50% { transform: translateY(-10px) rotate(3deg); }
-        }
-        @keyframes floatNode1 {
-          0%, 100% { transform: translateY(0px) rotate(0deg); }
-          50% { transform: translateY(-14px) rotate(-2deg); }
-        }
-        @keyframes floatNode2 {
-          0%, 100% { transform: translateY(0px) rotate(0deg); }
-          50% { transform: translateY(-8px) rotate(4deg); }
-        }
-        @keyframes glowPulse {
-          0%, 100% { opacity: 0.6; }
-          50% { opacity: 1; }
-        }
-        @keyframes shimmer {
-          0% { background-position: -200% center; }
-          100% { background-position: 200% center; }
-        }
-        @keyframes fadeUp {
-          from { opacity: 0; transform: translateY(24px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes slideIn {
-          from { opacity: 0; transform: translateX(-20px); }
-          to { opacity: 1; transform: translateX(0); }
-        }
-        @keyframes statusPulse {
-          0%, 100% { opacity: 1; transform: scale(1); }
-          50% { opacity: 0.5; transform: scale(0.85); }
-        }
-        @keyframes cursorGlow {
-          0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.18; }
-          50% { transform: translate(-50%, -50%) scale(1.15); opacity: 0.28; }
-        }
+        html { scroll-behavior: smooth; }
+        html, body, #root { width: 100%; background: var(--ink); }
 
-        .nav-link {
-          color: var(--muted);
-          text-decoration: none;
-          font-size: 13.5px;
-          font-weight: 500;
-          letter-spacing: 0.02em;
-          padding: 6px 2px;
-          transition: color 0.2s;
-          cursor: pointer;
-          position: relative;
-        }
-        .nav-link:hover, .nav-link.active { color: var(--text); }
-        .nav-link.active::after {
-          content: '';
-          position: absolute;
-          bottom: 0; left: 0; right: 0;
-          height: 1.5px;
-          background: linear-gradient(90deg, var(--pink), var(--mauve));
-          border-radius: 2px;
-        }
-
-        .pill-btn {
-          background: linear-gradient(135deg, var(--pink), var(--mauve));
-          color: white;
-          border: none;
-          padding: 10px 22px;
-          border-radius: 100px;
-          font-size: 13px;
-          font-weight: 600;
-          cursor: pointer;
-          transition: all 0.25s;
-          box-shadow: 0 0 20px #E2A4C440;
-          letter-spacing: 0.02em;
-          text-decoration: none;
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-        }
-        .pill-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 28px #E2A4C460; }
-
-        .pill-outline {
-          background: transparent;
+        .site {
+          font-family: var(--sans);
+          font-size: 16px;
+          background: var(--ink);
           color: var(--text);
-          border: 1.5px solid #3D2F55;
-          padding: 10px 22px;
-          border-radius: 100px;
-          font-size: 13px;
-          font-weight: 500;
-          cursor: pointer;
-          transition: all 0.25s;
-          letter-spacing: 0.02em;
-          text-decoration: none;
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
+          min-height: 100vh;
+          overflow-x: hidden;
+          line-height: 1.6;
         }
-        .pill-outline:hover { border-color: var(--pink); color: var(--pink); }
 
-        .tag-pill {
-          background: #1E1833;
-          border: 1px solid #3D2F55;
-          color: var(--lavender);
-          padding: 6px 14px;
-          border-radius: 100px;
+        ::selection { background: var(--pink); color: var(--ink); }
+
+        .wrap { max-width: 1080px; margin: 0 auto; padding: 0 32px; }
+
+        /* ── voices ── */
+        .v-design { font-family: var(--serif); font-style: italic; font-weight: 400; color: var(--pink); }
+        .v-build { font-family: var(--mono); font-weight: 500; font-size: 0.82em; letter-spacing: -0.01em; color: var(--lavender); }
+
+        .eyebrow {
+          font-family: var(--mono);
           font-size: 12px;
           font-weight: 500;
-          display: inline-block;
-          transition: all 0.2s;
-        }
-        .tag-pill:hover { border-color: var(--pink); color: var(--pink); background: #271C3C; }
-
-        .glass-card {
-          background: linear-gradient(135deg, rgba(30,24,51,0.7), rgba(23,18,42,0.5));
-          border: 1px solid rgba(226,164,196,0.12);
-          backdrop-filter: blur(16px);
-          -webkit-backdrop-filter: blur(16px);
-          border-radius: 20px;
-          transition: all 0.3s;
-        }
-        .glass-card:hover {
-          border-color: rgba(226,164,196,0.28);
-          transform: translateY(-4px);
-          box-shadow: 0 20px 60px rgba(154,107,138,0.2);
-        }
-
-        .gradient-text {
-          background: linear-gradient(135deg, #E2A4C4 0%, #C8A0D8 40%, #9A6B8A 100%);
-          background-size: 200% auto;
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-          animation: shimmer 4s linear infinite;
-        }
-
-        .section-label {
-          font-size: 11px;
-          font-weight: 600;
-          letter-spacing: 0.18em;
+          letter-spacing: 0.16em;
           text-transform: uppercase;
-          color: var(--pink);
-          margin-bottom: 12px;
-          display: block;
-        }
-
-        .work-card { animation: fadeUp 0.6s ease both; }
-        .work-card:nth-child(2) { animation-delay: 0.1s; }
-        .work-card:nth-child(3) { animation-delay: 0.2s; }
-
-        .stack-item {
-          padding: 9px 14px;
-          background: rgba(30,24,51,0.6);
-          border: 1px solid #2D2245;
-          border-radius: 8px;
-          font-size: 12.5px;
-          color: var(--lavender);
-          font-weight: 500;
-          transition: all 0.2s;
+          color: var(--rose);
           display: flex;
-          justify-content: space-between;
           align-items: center;
+          gap: 14px;
+          margin-bottom: 28px;
         }
-        .stack-item:hover { border-color: var(--mauve); color: var(--text); background: rgba(154,107,138,0.12); }
+        .eyebrow::after { content: ''; flex: 1; height: 1px; background: var(--line); }
 
-        .stack-badge-shipped {
-          font-size: 9px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
-          color: #5DCAA5; background: rgba(93,202,165,0.1); border: 1px solid rgba(93,202,165,0.25);
-          padding: 2px 7px; border-radius: 100px;
-        }
-        .stack-badge-learning {
-          font-size: 9px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
-          color: #FAC775; background: rgba(250,199,117,0.1); border: 1px solid rgba(250,199,117,0.25);
-          padding: 2px 7px; border-radius: 100px;
-        }
-
-        .cursor-aura {
-          position: fixed; width: 280px; height: 280px; border-radius: 50%;
-          background: radial-gradient(circle, #E2A4C418 0%, transparent 70%);
-          pointer-events: none; z-index: 0;
-          animation: cursorGlow 3s ease-in-out infinite;
-          transition: left 0.12s ease-out, top 0.12s ease-out;
+        .h2 {
+          font-family: var(--serif);
+          font-weight: 420;
+          font-size: clamp(30px, 4.4vw, 44px);
+          line-height: 1.12;
+          letter-spacing: -0.01em;
+          margin-bottom: 20px;
         }
 
-        .hero-eyebrow {
-          display: inline-flex; align-items: center; gap: 8px;
-          background: rgba(226,164,196,0.08); border: 1px solid rgba(226,164,196,0.2);
-          border-radius: 100px; padding: 6px 14px; font-size: 12px; font-weight: 500;
-          color: var(--pink); margin-bottom: 28px; animation: slideIn 0.6s ease both;
+        section { padding: 104px 0; border-top: 1px solid var(--line); }
+        section#home { border-top: none; padding: 0; }
+
+        /* ── animation ── */
+        @keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+        .rise { animation: rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+        .d1 { animation-delay: 0.08s; } .d2 { animation-delay: 0.16s; }
+        .d3 { animation-delay: 0.24s; } .d4 { animation-delay: 0.32s; }
+
+        @media (prefers-reduced-motion: reduce) {
+          *, *::before, *::after { animation: none !important; transition: none !important; }
+          html { scroll-behavior: auto; }
         }
 
-        .stat-block { display: flex; flex-direction: column; gap: 2px; }
-        .stat-num {
-          font-size: 28px; font-weight: 700;
-          background: linear-gradient(135deg, var(--pink), var(--mauve));
-          -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-          background-clip: text; line-height: 1;
+        /* ── nav ── */
+        .nav {
+          position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+          height: 68px;
+          display: flex; align-items: center;
+          border-bottom: 1px solid transparent;
+          transition: background 0.3s, border-color 0.3s;
         }
-        .stat-label { font-size: 11px; color: var(--muted); font-weight: 400; }
+        .nav.scrolled {
+          background: rgba(20, 16, 31, 0.9);
+          backdrop-filter: blur(14px);
+          -webkit-backdrop-filter: blur(14px);
+          border-bottom-color: var(--line);
+        }
+        .nav-inner { display: flex; align-items: center; justify-content: space-between; width: 100%; }
+        .logo { font-family: var(--mono); font-size: 14px; font-weight: 500; color: var(--text); }
+        .logo em { font-family: var(--serif); font-style: italic; color: var(--pink); font-size: 16px; }
+        .nav-links { display: flex; gap: 28px; }
+        .nav-link {
+          background: none; border: none; cursor: pointer;
+          font-family: var(--sans); font-size: 14px; font-weight: 450;
+          color: var(--muted); padding: 6px 0; position: relative;
+          transition: color 0.2s;
+        }
+        .nav-link:hover { color: var(--text); }
+        .nav-link.active { color: var(--text); }
+        .nav-link.active::after {
+          content: ''; position: absolute; left: 0; right: 0; bottom: 0;
+          height: 1.5px; background: var(--pink);
+        }
+        .nav-cta { display: flex; gap: 10px; align-items: center; }
 
-        .orbit-ring {
-          position: absolute; border-radius: 50%;
-          border: 1px dashed rgba(226,164,196,0.1);
-          top: 50%; left: 50%; transform: translate(-50%, -50%);
+        .btn {
+          font-family: var(--sans); font-size: 14px; font-weight: 550;
+          padding: 10px 22px; border-radius: 4px; cursor: pointer;
+          text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+          transition: background 0.2s, color 0.2s, border-color 0.2s;
+          border: 1px solid transparent;
+        }
+        .btn-solid { background: var(--pink); color: var(--ink); }
+        .btn-solid:hover { background: var(--text); }
+        .btn-ghost { background: transparent; color: var(--text); border-color: var(--line-strong); }
+        .btn-ghost:hover { border-color: var(--pink); color: var(--pink); }
+
+        .menu-btn {
+          display: none; background: none; border: 1px solid var(--line-strong);
+          border-radius: 4px; width: 40px; height: 40px; cursor: pointer;
+          color: var(--text); font-size: 18px; line-height: 1;
+        }
+        .mobile-menu {
+          position: fixed; inset: 0; z-index: 99;
+          background: var(--ink);
+          display: flex; flex-direction: column; justify-content: center;
+          padding: 0 32px; gap: 8px;
+        }
+        .mobile-menu .nav-link {
+          font-family: var(--serif); font-size: 34px; font-weight: 400;
+          text-align: left; padding: 10px 0;
+          border-bottom: 1px solid var(--line);
         }
 
-        .contact-card-link {
-          text-decoration: none; display: block;
+        /* ── hero ── */
+        .hero {
+          min-height: 100vh;
+          display: grid;
+          grid-template-columns: 1.15fr 0.85fr;
+          gap: 64px;
+          align-items: center;
+          padding-top: 68px;
         }
-        .contact-channel {
-          padding: 22px 28px;
-          display: flex; align-items: center; gap: 20;
-          text-align: left; cursor: pointer;
+        .hero-kicker {
+          font-family: var(--mono); font-size: 13px; color: var(--muted);
+          display: flex; align-items: center; gap: 10px; margin-bottom: 28px;
+        }
+        .hero-kicker .dot {
+          width: 7px; height: 7px; border-radius: 50%; background: var(--green);
+          box-shadow: 0 0 10px rgba(93, 202, 165, 0.6);
+        }
+        .hero h1 {
+          font-family: var(--serif);
+          font-weight: 380;
+          font-size: clamp(42px, 6.4vw, 72px);
+          line-height: 1.06;
+          letter-spacing: -0.015em;
+          margin-bottom: 30px;
+        }
+        .hero h1 .v-build { font-size: 0.72em; }
+        .hero-lede {
+          font-size: 17px; color: var(--muted); line-height: 1.7;
+          max-width: 460px; margin-bottom: 36px;
+        }
+        .hero-lede strong { color: var(--text); font-weight: 500; }
+        .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 56px; }
+        .hero-meta {
+          display: flex; gap: 0; border-top: 1px solid var(--line);
+        }
+        .hero-meta > div {
+          padding: 18px 28px 0 0; margin-right: 28px;
+          border-right: 1px solid var(--line);
+        }
+        .hero-meta > div:last-child { border-right: none; margin-right: 0; }
+        .hero-meta .num { font-family: var(--serif); font-size: 30px; color: var(--pink); line-height: 1.1; }
+        .hero-meta .lbl { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--faint); margin-top: 4px; }
+
+        .portrait-frame { position: relative; justify-self: end; }
+        .portrait {
+          width: min(360px, 100%);
+          aspect-ratio: 4 / 5;
+          object-fit: cover;
+          object-position: center top;
+          border-radius: 6px;
+          display: block;
+          position: relative;
+          z-index: 1;
+          filter: saturate(0.92);
+        }
+        .portrait-frame::before {
+          content: '';
+          position: absolute; inset: 0;
+          transform: translate(16px, 16px);
+          border: 1px solid var(--line-strong);
+          border-radius: 6px;
+        }
+        .portrait-caption {
+          font-family: var(--mono); font-size: 11.5px; color: var(--faint);
+          margin-top: 26px; letter-spacing: 0.04em;
         }
 
-        .timeline-dot {
-          width: 10px; height: 10px; border-radius: 50%;
-          flex-shrink: 0; margin-top: 5px;
+        /* ── about ── */
+        .about-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 64px; align-items: start; }
+        .about-copy p { color: var(--muted); margin-bottom: 18px; max-width: 540px; }
+        .about-copy p strong { color: var(--text); font-weight: 500; }
+        .about-facts { display: flex; flex-direction: column; }
+        .fact {
+          display: flex; justify-content: space-between; align-items: baseline; gap: 20px;
+          padding: 16px 0; border-bottom: 1px solid var(--line);
+        }
+        .fact:first-child { border-top: 1px solid var(--line); }
+        .fact .k { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--faint); white-space: nowrap; }
+        .fact .v { font-size: 14.5px; color: var(--text); text-align: right; }
+
+        /* ── works ── */
+        .works-head { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 48px; gap: 20px; flex-wrap: wrap; }
+        .works-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+        .work-card {
+          background: var(--ink);
+          padding: 32px 28px;
+          display: flex; flex-direction: column;
+          transition: background 0.25s;
+        }
+        .work-card:hover { background: var(--ink-2); }
+        .work-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
+        .work-year { font-family: var(--mono); font-size: 12px; color: var(--faint); }
+        .work-type { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--rose); }
+        .work-title { font-family: var(--serif); font-weight: 450; font-size: 27px; letter-spacing: -0.01em; margin-bottom: 4px; }
+        .work-role { font-size: 13px; color: var(--muted); margin-bottom: 18px; }
+        .work-pipeline {
+          font-family: var(--mono); font-size: 11.5px; color: var(--lavender);
+          background: rgba(226, 164, 196, 0.06);
+          border-left: 2px solid var(--pink);
+          padding: 9px 12px; margin-bottom: 18px;
+          line-height: 1.5;
+        }
+        .work-problem { font-size: 13.5px; color: var(--muted); line-height: 1.6; margin-bottom: 12px; }
+        .work-problem .k { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--rose); display: block; margin-bottom: 4px; }
+        .work-desc { font-size: 13.5px; color: var(--muted); line-height: 1.65; margin-bottom: 20px; flex: 1; }
+        .work-tags { font-family: var(--mono); font-size: 11.5px; color: var(--faint); margin-bottom: 22px; }
+        .work-links { display: flex; gap: 18px; flex-wrap: wrap; border-top: 1px solid var(--line); padding-top: 16px; }
+        .work-link {
+          font-family: var(--mono); font-size: 12px; color: var(--muted);
+          text-decoration: none; background: none; border: none; cursor: pointer; padding: 0;
+          transition: color 0.2s;
+        }
+        .work-link:hover { color: var(--pink); }
+        .work-link.primary { color: var(--pink); }
+        .work-link.primary:hover { color: var(--text); }
+
+        /* ── experience ── */
+        .timeline { border-left: 1px solid var(--line); margin-left: 5px; }
+        .tl-item { position: relative; padding: 0 0 40px 36px; }
+        .tl-item:last-child { padding-bottom: 0; }
+        .tl-item::before {
+          content: ''; position: absolute; left: -5px; top: 7px;
+          width: 9px; height: 9px; border-radius: 50%;
+          background: var(--ink); border: 1.5px solid var(--rose);
+        }
+        .tl-item.project::before { background: var(--pink); border-color: var(--pink); }
+        .tl-year { font-family: var(--mono); font-size: 12px; color: var(--faint); margin-bottom: 6px; letter-spacing: 0.04em; }
+        .tl-role { font-family: var(--serif); font-size: 21px; font-weight: 450; margin-bottom: 3px; }
+        .tl-org { font-size: 13.5px; color: var(--pink); margin-bottom: 8px; }
+        .tl-desc { font-size: 14px; color: var(--muted); max-width: 560px; }
+
+        /* ── services ── */
+        .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); margin-bottom: 72px; }
+        .service-card { background: var(--ink); padding: 32px 28px; transition: background 0.25s; }
+        .service-card:hover { background: var(--ink-2); }
+        .service-title { font-family: var(--serif); font-size: 23px; font-weight: 450; margin-bottom: 4px; }
+        .service-sub { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--rose); margin-bottom: 18px; }
+        .service-desc { font-size: 13.5px; color: var(--muted); line-height: 1.7; margin-bottom: 20px; }
+        .service-bullets { font-family: var(--mono); font-size: 11.5px; color: var(--faint); line-height: 2; }
+
+        .stack-note { font-size: 13.5px; color: var(--muted); margin-bottom: 32px; }
+        .badge-shipped, .badge-learning {
+          font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
+          padding: 2px 8px; border-radius: 3px;
+        }
+        .badge-shipped { color: var(--green); border: 1px solid rgba(93, 202, 165, 0.3); }
+        .badge-learning { color: var(--amber); border: 1px solid rgba(250, 199, 117, 0.3); }
+        .stack-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 36px; }
+        .stack-cat { font-family: var(--mono); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--pink); padding-bottom: 12px; border-bottom: 1px solid var(--line-strong); margin-bottom: 4px; }
+        .stack-row {
+          display: flex; justify-content: space-between; align-items: center;
+          padding: 10px 0; border-bottom: 1px solid var(--line);
+          font-size: 14px; color: var(--text);
         }
 
-        .social-link {
-          width: 36px; height: 36px; border-radius: 50%;
-          background: rgba(226,164,196,0.06); border: 1px solid rgba(226,164,196,0.15);
-          display: flex; align-items: center; justify-content: center;
-          cursor: pointer; font-size: 13px; color: var(--muted);
-          text-decoration: none; transition: all 0.2s;
+        /* ── certifications ── */
+        .cert-row {
+          display: grid; grid-template-columns: 70px 1fr auto; gap: 24px; align-items: baseline;
+          padding: 18px 0; border-bottom: 1px solid var(--line);
         }
-        .social-link:hover { border-color: var(--pink); color: var(--pink); background: rgba(226,164,196,0.1); }
+        .cert-row:first-of-type { border-top: 1px solid var(--line); }
+        .cert-year { font-family: var(--mono); font-size: 12.5px; color: var(--faint); }
+        .cert-name { font-size: 15.5px; font-weight: 500; }
+        .cert-issuer { font-size: 13px; color: var(--muted); text-align: right; }
 
-        .availability-badge {
-          display: inline-flex; align-items: center; gap: 7px;
-          background: rgba(93,202,165,0.08); border: 1px solid rgba(93,202,165,0.25);
-          border-radius: 100px; padding: 6px 14px; font-size: 12px; font-weight: 500;
-          color: #5DCAA5; margin-bottom: 16px; animation: slideIn 0.5s ease both;
+        /* ── contact ── */
+        .contact-head { max-width: 620px; margin-bottom: 56px; }
+        .contact-head p { color: var(--muted); }
+        .contact-list { display: flex; flex-direction: column; }
+        .contact-row {
+          display: grid; grid-template-columns: 130px 1fr auto; gap: 24px; align-items: center;
+          padding: 26px 0; border-bottom: 1px solid var(--line);
+          text-decoration: none; transition: padding-left 0.25s;
         }
+        .contact-row:first-child { border-top: 1px solid var(--line); }
+        .contact-row:hover { padding-left: 12px; }
+        .contact-row .ch { font-family: var(--mono); font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--faint); }
+        .contact-row .addr { font-family: var(--serif); font-size: clamp(18px, 3vw, 26px); font-weight: 420; color: var(--text); transition: color 0.2s; word-break: break-word; }
+        .contact-row:hover .addr { color: var(--pink); }
+        .contact-row .arrow { font-size: 20px; color: var(--rose); }
 
-        .card-link-btn {
-          background: none; border: none; font-size: 12px; cursor: pointer;
-          display: inline-flex; align-items: center; gap: 4px;
-          padding: 0; transition: color 0.2s; text-decoration: none; font-family: inherit;
+        /* ── footer ── */
+        .footer {
+          border-top: 1px solid var(--line);
+          padding: 28px 0;
         }
+        .footer-inner { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+        .footer-inner, .footer a { font-size: 13px; color: var(--faint); text-decoration: none; }
+        .footer a:hover { color: var(--pink); }
+        .footer-links { display: flex; gap: 20px; }
 
-        .about-card {
-          background: linear-gradient(135deg, rgba(226,164,196,0.06), rgba(154,107,138,0.04));
-          border: 1px solid rgba(226,164,196,0.12); border-radius: 16px; padding: 24px;
+        /* ── responsive ── */
+        @media (max-width: 900px) {
+          .works-grid, .services-grid { grid-template-columns: 1fr; }
+          .stack-grid { grid-template-columns: repeat(2, 1fr); }
+          .hero { grid-template-columns: 1fr; gap: 48px; padding-top: 110px; min-height: 0; padding-bottom: 80px; }
+          .portrait-frame { justify-self: start; }
         }
-        .about-card-label {
-          font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
-          text-transform: uppercase; color: #9A7BB0; margin-bottom: 3px;
-        }
-        .about-card-value { font-size: 13.5px; font-weight: 500; color: #EDE8F5; }
-
-        @media (max-width: 768px) {
-          .hero-grid { grid-template-columns: 1fr !important; }
-          .nav-links-mid { display: none !important; }
-          .works-grid { grid-template-columns: 1fr !important; }
-          .stack-grid { grid-template-columns: repeat(2, 1fr) !important; }
-          .about-grid { grid-template-columns: 1fr !important; }
+        @media (max-width: 700px) {
+          .wrap { padding: 0 20px; }
+          section { padding: 72px 0; }
+          .nav-links, .nav-cta .btn-ghost { display: none; }
+          .menu-btn { display: block; }
+          .about-grid { grid-template-columns: 1fr; gap: 40px; }
+          .stack-grid { grid-template-columns: 1fr; gap: 28px; }
+          .hero-meta { flex-wrap: wrap; }
+          .hero-meta > div { border-right: none; margin-right: 0; padding-right: 0; width: 50%; }
+          .cert-row { grid-template-columns: 60px 1fr; }
+          .cert-issuer { grid-column: 2; text-align: left; }
+          .contact-row { grid-template-columns: 1fr auto; }
+          .contact-row .ch { display: none; }
         }
       `}</style>
 
-      {/* Cursor aura */}
-      <div className="cursor-aura" style={{ left: cursorPos.x, top: cursorPos.y }} />
-
-      {/* Background */}
-      <div style={{ position: "fixed", inset: 0, backgroundImage: "radial-gradient(circle at 1px 1px, rgba(226,164,196,0.04) 1px, transparent 0)", backgroundSize: "40px 40px", pointerEvents: "none", zIndex: 0 }} />
-      <div style={{ position: "fixed", top: 0, left: "30%", width: 600, height: 600, background: "radial-gradient(ellipse, rgba(154,107,138,0.12) 0%, transparent 65%)", pointerEvents: "none", zIndex: 0 }} />
-
       {/* ─── NAV ─── */}
-      <nav style={{
-        position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
-        display: "flex", alignItems: "center", justifyContent: "space-between",
-        padding: "0 60px", height: 64,
-        background: scrolled ? "rgba(15,12,27,0.92)" : "transparent",
-        backdropFilter: scrolled ? "blur(16px)" : "none",
-        borderBottom: scrolled ? "1px solid rgba(226,164,196,0.08)" : "none",
-        transition: "all 0.3s",
-      }}>
-        <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: "0.02em" }}>
-          <span style={{ color: "#E2A4C4" }}>&lt;</span>
-          <span style={{ color: "#EDE8F5" }}>trisha</span>
-          <span style={{ color: "#9A6B8A" }}>.dev</span>
-          <span style={{ color: "#E2A4C4" }}> /&gt;</span>
+      <nav className={`nav${scrolled ? " scrolled" : ""}`}>
+        <div className="wrap nav-inner">
+          <div className="logo">
+            trisha<em>.dev</em>
+          </div>
+          <div className="nav-links">
+            {NAV_LINKS.map((l) => (
+              <button
+                key={l}
+                className={`nav-link${activeNav === l ? " active" : ""}`}
+                onClick={() => scrollToSection(l)}
+              >
+                {l}
+              </button>
+            ))}
+          </div>
+          <div className="nav-cta">
+            <a href="/Cararag_Resume_IT.pdf" target="_blank" rel="noreferrer" className="btn btn-ghost">
+              Resume
+            </a>
+            <button className="btn btn-solid" onClick={() => scrollToSection("Contact")}>
+              Let's work
+            </button>
+            <button className="menu-btn" onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle menu" aria-expanded={menuOpen}>
+              {menuOpen ? "✕" : "☰"}
+            </button>
+          </div>
         </div>
-
-        <div className="nav-links-mid" style={{ display: "flex", gap: 32, alignItems: "center" }}>
-          {NAV_LINKS.map(l => (
-            <span key={l} className={`nav-link${activeNav === l ? " active" : ""}`} onClick={() => scrollToSection(l)}>{l}</span>
-          ))}
-        </div>
-
-        <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-  <a href="/Cararag_Resume_IT.pdf" target="_blank" rel="noreferrer" download className="pill-outline" style={{ padding: "8px 18px", fontSize: 13, height: 38, lineHeight: "1" }}>↓ Resume</a>
-<button className="pill-btn" onClick={() => scrollToSection("Contact")} style={{ padding: "8px 18px", fontSize: 13, height: 38, lineHeight: "1" }}>Let's Work</button>
-</div>
       </nav>
 
+      {menuOpen && (
+        <div className="mobile-menu">
+          {NAV_LINKS.map((l) => (
+            <button
+              key={l}
+              className={`nav-link${activeNav === l ? " active" : ""}`}
+              onClick={() => scrollToSection(l)}
+            >
+              {l}
+            </button>
+          ))}
+        </div>
+      )}
+
       {/* ─── HERO ─── */}
-      <section id="home" ref={heroRef} style={{ minHeight: "100vh", display: "flex", alignItems: "center", padding: "100px 60px 60px", position: "relative", zIndex: 1 }}>
-      <HeroBackground />
-        
-        <div className="hero-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 60, alignItems: "center", width: "100%", maxWidth: 1200, margin: "0 auto" }}>
-
-          <div style={{ animation: "fadeUp 0.7s ease both" }}>
-            <h1 style={{ fontSize: 58, fontWeight: 800, lineHeight: 1.05, marginBottom: 18, letterSpacing: "-0.02em", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
-              <span style={{ color: "#EDE8F5" }}>Hi, I am </span>
-              <span className="gradient-text">Trisha</span>
+      <section id="home">
+        <div className="wrap hero">
+          <div>
+            <div className="hero-kicker rise">
+              <span className="dot" />
+              Available for freelance & remote work · Philippines
+            </div>
+            <h1 className="rise d1">
+              A builder who <span className="v-design">designs.</span>
+              <br />
+              A designer who <span className="v-build">ships();</span>
             </h1>
-            <p style={{ fontSize: 17, fontWeight: 500, color: "#C8B8D8", lineHeight: 1.65, marginBottom: 10, maxWidth: 440 }}>
-              Frontend Developer & UX/UI Designer
+            <p className="hero-lede rise d2">
+              I'm <strong>Trisha Raye Cararag</strong> — frontend developer and UX/UI
+              designer. I take products from <strong>Figma prototype to deployed
+              code</strong>, with the same intentionality at every step.
             </p>
-            <p style={{ fontSize: 13.5, color: "#9A8DB0", lineHeight: 1.75, marginBottom: 32, maxWidth: 420 }}>
-              Building beautiful, scalable, and high-quality digital products, faster with AI, smarter with experience. Based in the Philippines.
-            </p>
-            <div style={{ display: "flex", gap: 10, marginBottom: 32, flexWrap: "wrap" }}>
-              {["Web", "Mobile", "UI/UX"].map(t => (
-                <span key={t} className="tag-pill">{t}</span>
-              ))}
+            <div className="hero-actions rise d3">
+              <button className="btn btn-solid" onClick={() => scrollToSection("Works")}>
+                View my work ↓
+              </button>
+              <a href="mailto:cararagtrisharaye@gmail.com" className="btn btn-ghost">
+                Get in touch
+              </a>
             </div>
-            <div style={{ display: "flex", gap: 14, marginBottom: 48, flexWrap: "wrap" }}>
-              <button className="pill-btn" style={{ padding: "12px 28px", fontSize: 14 }} onClick={() => scrollToSection("Works")}>View My Work ↓</button>
-              <a href="mailto:cararagtrisharaye@gmail.com" className="pill-outline" style={{ padding: "12px 28px", fontSize: 14 }}>Let's Create Something</a>
-            </div>
-            <div style={{ display: "flex", gap: 40 }}>
-              {[["3+", "Projects Shipped"], ["2", "Years Designing"], ["∞", "Iterations"]].map(([n, l]) => (
-                <div key={l} className="stat-block">
-                  <span className="stat-num">{n}</span>
-                  <span className="stat-label">{l}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div style={{ position: "relative", height: 460, animation: "fadeUp 0.9s ease 0.15s both" }}>
-            {/* Orbit rings */}
-            <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: 380, height: 380, borderRadius: "50%", border: "1px dashed rgba(226,164,196,0.15)" }} />
-            <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: 480, height: 480, borderRadius: "50%", border: "1px dashed rgba(226,164,196,0.08)" }} />
-
-            {/* Big circular photo */}
-            <div style={{
-              position: "absolute", top: "50%", left: "50%",
-              transform: "translate(-50%, -50%)",
-              width: 320, height: 320, borderRadius: "50%",
-              overflow: "hidden",
-              border: "3px solid rgba(226,164,196,0.35)",
-              boxShadow: "0 0 60px rgba(226,164,196,0.2), 0 0 120px rgba(154,107,138,0.15)",
-              zIndex: 3,
-            }}>
-              <img
-                src="/Trisha-profile.jpg"
-                alt="Trisha Raye"
-                style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center top" }}
-              />
-            </div>
-
-            {/* Floating tech nodes */}
-            
-
-            {/* Available Now badge */}
-            <div style={{ position: "absolute", bottom: 20, right: 20, background: "rgba(226,164,196,0.08)", border: "1px solid rgba(226,164,196,0.15)", borderRadius: 12, padding: "10px 16px", display: "flex", alignItems: "center", gap: 10, backdropFilter: "blur(8px)" }}>
-              <div style={{ width: 28, height: 28, borderRadius: "50%", background: "linear-gradient(135deg, #5DCAA5, #0F6E56)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <polyline points="20 6 9 17 4 12"/>
-                </svg>
+            <div className="hero-meta rise d4">
+              <div>
+                <div className="num">3</div>
+                <div className="lbl">Projects shipped</div>
               </div>
               <div>
-                <div style={{ fontSize: 12, fontWeight: 600, color: "#EDE8F5" }}>Available Now</div>
-                <div style={{ fontSize: 10, color: "#9A8DB0" }}>Open to Opportunities</div>
+                <div className="num">2</div>
+                <div className="lbl">Years designing</div>
+              </div>
+              <div>
+                <div className="num">∞</div>
+                <div className="lbl">Iterations</div>
               </div>
             </div>
           </div>
 
-        </div>
-
-        <div style={{ position: "absolute", bottom: 36, left: "50%", transform: "translateX(-50%)", display: "flex", flexDirection: "column", alignItems: "center", gap: 8, color: "#6B5F80", fontSize: 11, letterSpacing: "0.12em", textTransform: "uppercase" }}>
-          Scroll to explore
-          <div style={{ width: 1, height: 36, background: "linear-gradient(to bottom, #E2A4C440, transparent)", animation: "glowPulse 2s ease-in-out infinite" }} />
+          <div className="portrait-frame rise d2">
+            <img className="portrait" src="/Trisha-profile.jpg" alt="Trisha Raye Cararag" />
+            <div className="portrait-caption">Cebu, Philippines · GMT+8 · she/her</div>
+          </div>
         </div>
       </section>
 
       {/* ─── ABOUT ─── */}
-      <section id="about" style={{ padding: "80px 60px", position: "relative", zIndex: 1 }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-          <span className="section-label">About Me</span>
-          <div className="about-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 48, alignItems: "start" }}>
-            <div>
-              <h2 style={{ fontSize: 38, fontWeight: 800, color: "#EDE8F5", letterSpacing: "-0.02em", marginBottom: 20, fontFamily: "'Plus Jakarta Sans', sans-serif", lineHeight: 1.1 }}>
-                A builder who <span className="gradient-text">designs</span> and a designer who <span className="gradient-text">ships.</span>
+      <section id="about">
+        <div className="wrap">
+          <div className="eyebrow">About</div>
+          <div className="about-grid">
+            <div className="about-copy">
+              <h2 className="h2">
+                Design and code aren't two jobs.
+                <br />
+                <span className="v-design">They're one craft.</span>
               </h2>
-              <p style={{ fontSize: 14, color: "#9A8DB0", lineHeight: 1.8, marginBottom: 16 }}>
-                I’m a Frontend Developer & UX/UI Designer in the Philippines, specializing in building responsive web and mobile applications. I care deeply about both clean code and thoughtful UX—blending visual design with frontend development to create intuitive digital experiences.
+              <p>
+                I'm a frontend developer and UX/UI designer based in the Philippines,
+                specializing in responsive web and mobile applications. I care about
+                both <strong>clean code and thoughtful UX</strong> — blending visual design
+                with engineering to build products that feel intuitive.
               </p>
-              <p style={{ fontSize: 14, color: "#9A8DB0", lineHeight: 1.8, marginBottom: 28 }}>
-                Whether it's architecting a Spring Boot REST API or crafting pixel-perfect Figma prototypes, I bring the same level of intentionality to both. Currently looking for freelance opportunities where I can contribute and grow.
+              <p>
+                Whether it's architecting a Spring Boot REST API or crafting
+                pixel-perfect Figma prototypes, I bring the same level of intentionality
+                to both. Currently looking for <strong>freelance opportunities</strong> where I
+                can contribute and grow.
               </p>
-              <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-                <a href="mailto:cararagtrisharaye@gmail.com" className="pill-btn" style={{ padding: "10px 20px", fontSize: 13 }}>✉ Email Me</a>
-                <a href="https://github.com/trxshx14" target="_blank" rel="noreferrer" className="pill-outline" style={{ padding: "10px 20px", fontSize: 13 }}>GitHub ↗</a>
-              </div>
             </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-              {[
-                {
-                  label: "Current Focus", value: "Freelance · Side Projects",
-                  iconSvg: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E2A4C4" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
-                },
-                {
-                  label: "Location", value: "Philippines · Open to Remote",
-                  iconSvg: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E2A4C4" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                },
-                {
-                  label: "Education", value: "Graduate in BS Information Technology",
-                  iconSvg: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E2A4C4" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
-                },
-                {
-                  label: "Availability", value: "Immediate · Part-time or Full-time",
-                  iconSvg: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E2A4C4" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                },
-              ].map(item => (
-                <div key={item.label} className="about-card" style={{ display: "flex", gap: 16, alignItems: "center" }}>
-                  <span style={{ flexShrink: 0 }}>{item.iconSvg}</span>
-                  <div>
-                    <div className="about-card-label">{item.label}</div>
-                    <div className="about-card-value">{item.value}</div>
-                  </div>
-                </div>
-              ))}
+            <div className="about-facts">
+              <div className="fact">
+                <span className="k">Focus</span>
+                <span className="v">Freelance · Side projects</span>
+              </div>
+              <div className="fact">
+                <span className="k">Location</span>
+                <span className="v">Philippines · Open to remote</span>
+              </div>
+              <div className="fact">
+                <span className="k">Education</span>
+                <span className="v">BS Information Technology · CIT-U</span>
+              </div>
+              <div className="fact">
+                <span className="k">Availability</span>
+                <span className="v">Immediate · Part-time or full-time</span>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* ─── WORKS ─── */}
-<section id="works" style={{ padding: "80px 60px", position: "relative", zIndex: 1 }}>
-  <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-    <span className="section-label">Selected Work</span>
-    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 44 }}>
-      <h2 style={{ fontSize: 40, fontWeight: 800, color: "#EDE8F5", letterSpacing: "-0.02em", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>Things I've <span className="gradient-text">Built</span></h2>
-      <a href="https://github.com/trxshx14" target="_blank" rel="noreferrer" className="pill-outline" style={{ fontSize: 12 }}>GitHub Profile ↗</a>
-    </div>
-
-    <div className="works-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20 }}>
-      {WORKS.map((w) => (
-        <div key={w.title} className="glass-card work-card" style={{ padding: 28, display: "flex", flexDirection: "column" }}>
-
-        
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16 }}>
-            <div style={{ width: 44, height: 44, borderRadius: 12, background: `${w.accent}18`, border: `1px solid ${w.accent}30`, display: "flex", alignItems: "center", justifyContent: "center" }}>
-              {w.icon(w.accent)}
-            </div>
-            <span style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: w.accent, background: `${w.accent}12`, padding: "4px 10px", borderRadius: 100 }}>{w.type}</span>
+      <section id="works">
+        <div className="wrap">
+          <div className="eyebrow">Selected work</div>
+          <div className="works-head">
+            <h2 className="h2" style={{ marginBottom: 0 }}>
+              Figma first. <span className="v-design">Shipped always.</span>
+            </h2>
+            <a href="https://github.com/trxshx14" target="_blank" rel="noreferrer" className="btn btn-ghost">
+              GitHub profile ↗
+            </a>
           </div>
 
-          <h3 style={{ fontSize: 20, fontWeight: 700, marginBottom: 6, letterSpacing: "-0.01em", color: "#EDE8F5" }}>{w.title}</h3>
-
-          <div style={{ fontSize: 11, color: w.accent, fontWeight: 600, marginBottom: 10, letterSpacing: "0.04em" }}>
-            ↳ {w.role}
-          </div>
-
-          <div style={{ background: `${w.accent}08`, border: `1px solid ${w.accent}18`, borderRadius: 8, padding: "8px 12px", marginBottom: 12 }}>
-            <span style={{ fontSize: 10, fontWeight: 600, color: w.accent, letterSpacing: "0.08em", textTransform: "uppercase" }}>Problem · </span>
-            <span style={{ fontSize: 11.5, color: "#9A8DB0", lineHeight: 1.5 }}>{w.problem}</span>
-          </div>
-
-          <p style={{ fontSize: 13, color: "#9A8DB0", lineHeight: 1.65, marginBottom: 16, flex: 1 }}>{w.desc}</p>
-
-          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 20 }}>
-            {w.tags.map(t => (
-              <span key={t} style={{ fontSize: 11, fontWeight: 500, color: w.accent, background: `${w.accent}12`, padding: "4px 10px", borderRadius: 100, border: `1px solid ${w.accent}22` }}>{t}</span>
+          <div className="works-grid">
+            {WORKS.map((w) => (
+              <article key={w.title} className="work-card">
+                <div className="work-top">
+                  <span className="work-type">{w.type}</span>
+                  <span className="work-year">{w.year}</span>
+                </div>
+                <h3 className="work-title">{w.title}</h3>
+                <div className="work-role">{w.role}</div>
+                <div className="work-pipeline">{w.pipeline}</div>
+                <div className="work-problem">
+                  <span className="k">Problem</span>
+                  {w.problem}
+                </div>
+                <p className="work-desc">{w.desc}</p>
+                <div className="work-tags">{w.tags.join(" · ")}</div>
+                <div className="work-links">
+                  {w.caseStudy && (
+                    <Link to={w.caseStudy} className="work-link primary">
+                      Case study →
+                    </Link>
+                  )}
+                  {w.demo && (
+                    <a href={w.demo} target="_blank" rel="noreferrer" className="work-link">
+                      Live demo ↗
+                    </a>
+                  )}
+                  <a href={w.github} target="_blank" rel="noreferrer" className="work-link">
+                    GitHub ↗
+                  </a>
+                  {w.apk && (
+                    <a href={w.apk} download className="work-link">
+                      APK ↓
+                    </a>
+                  )}
+                </div>
+              </article>
             ))}
           </div>
-
-          <div style={{ display: "flex", gap: 16, borderTop: "1px solid rgba(226,164,196,0.08)", paddingTop: 16 }}>
-            <a href={w.github} target="_blank" rel="noreferrer" className="card-link-btn" style={{ color: "#9A8DB0" }} onMouseEnter={e => e.currentTarget.style.color = w.accent} onMouseLeave={e => e.currentTarget.style.color = "#9A8DB0"}>
-              GitHub ↗
-            </a>
-            {w.demo ? (
-              <a href={w.demo} target="_blank" rel="noreferrer" className="card-link-btn" style={{ color: "#9A8DB0" }} onMouseEnter={e => e.currentTarget.style.color = w.accent} onMouseLeave={e => e.currentTarget.style.color = "#9A8DB0"}>
-                Live Demo ↗
-              </a>
-            ) : (
-              <span style={{ fontSize: 12, color: "#6B5F80", display: "flex", alignItems: "center", gap: 6 }}>
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#6B5F80" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
-                Private Repo
-              </span>
-            )}
-            {w.apk && (
-              <a href={w.apk} download className="card-link-btn" style={{ color: "#9A8DB0" }} onMouseEnter={e => e.currentTarget.style.color = w.accent} onMouseLeave={e => e.currentTarget.style.color = "#9A8DB0"}>
-                ↓ APK
-              </a>
-            )}
-            {w.caseStudy && (
-  <Link to={w.caseStudy} className="card-link-btn" style={{ color: "#9A8DB0" }} onMouseEnter={e => e.currentTarget.style.color = w.accent} onMouseLeave={e => e.currentTarget.style.color = "#9A8DB0"}>
-    → Case Study
-  </Link>
-)}
-          </div>
         </div>
-      ))}
-    </div>
-  </div>
-</section>
+      </section>
 
       {/* ─── EXPERIENCE ─── */}
-      <section id="experience" style={{ padding: "60px 60px 80px", position: "relative", zIndex: 1 }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-          <span className="section-label">Experience & Education</span>
-          <h2 style={{ fontSize: 36, fontWeight: 800, color: "#EDE8F5", letterSpacing: "-0.02em", marginBottom: 44, fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
-            My <span className="gradient-text">Journey</span>
+      <section id="experience">
+        <div className="wrap">
+          <div className="eyebrow">Experience & education</div>
+          <h2 className="h2">
+            The <span className="v-design">journey</span> so far
           </h2>
-
-          <div style={{ position: "relative", paddingLeft: 28 }}>
-            <div style={{ position: "absolute", left: 4, top: 8, bottom: 8, width: 1, background: "linear-gradient(to bottom, #E2A4C440, #9A6B8A40, transparent)" }} />
-            {EXPERIENCE.map((e, i) => (
-              <div key={i} style={{ position: "relative", display: "flex", gap: 20, marginBottom: 32, animation: `fadeUp 0.6s ease ${i * 0.1}s both` }}>
-                <div className="timeline-dot" style={{ background: e.type === "edu" ? "#9A6B8A" : "#E2A4C4", boxShadow: `0 0 8px ${e.type === "edu" ? "#9A6B8A" : "#E2A4C4"}60`, position: "absolute", left: -24, top: 6 }} />
-                <div className="glass-card" style={{ padding: "20px 24px", flex: 1 }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8, gap: 12 }}>
-                    <div>
-                      <div style={{ fontSize: 15, fontWeight: 700, color: "#EDE8F5", marginBottom: 2 }}>{e.role}</div>
-                      <div style={{ fontSize: 12, color: "#E2A4C4", fontWeight: 500 }}>{e.org}</div>
-                    </div>
-                    <span style={{ fontSize: 11, color: "#9A8DB0", fontWeight: 500, whiteSpace: "nowrap", background: "rgba(226,164,196,0.06)", border: "1px solid rgba(226,164,196,0.12)", padding: "4px 10px", borderRadius: 100 }}>{e.year}</span>
-                  </div>
-                  <p style={{ fontSize: 13, color: "#9A8DB0", lineHeight: 1.65 }}>{e.desc}</p>
-                </div>
+          <div style={{ height: 28 }} />
+          <div className="timeline">
+            {EXPERIENCE.map((e) => (
+              <div key={e.year + e.role} className={`tl-item${e.type === "project" ? " project" : ""}`}>
+                <div className="tl-year">{e.year}</div>
+                <div className="tl-role">{e.role}</div>
+                <div className="tl-org">{e.org}</div>
+                <p className="tl-desc">{e.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ─── SERVICES + TECH STACK ─── */}
-<section id="services" style={{ padding: "60px 60px 80px", position: "relative", zIndex: 1 }}>
-  <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-    
-    {/* Header */}
-    <span className="section-label">Services & Stack</span>
-    <h2 style={{ fontSize: 40, fontWeight: 800, color: "#EDE8F5", letterSpacing: "-0.02em", marginBottom: 8, fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
-      What I can <span className="gradient-text">do for you.</span>
-    </h2>
-    <p style={{ fontSize: 14, color: "#9A8DB0", lineHeight: 1.7, marginBottom: 48, maxWidth: 500 }}>
-      Student-built, but seriously considered. Every service reflects real skills practiced through coursework and personal projects.
-    </p>
+      {/* ─── SERVICES + STACK ─── */}
+      <section id="services">
+        <div className="wrap">
+          <div className="eyebrow">Services & stack</div>
+          <h2 className="h2">
+            What I can <span className="v-design">do for you</span>
+          </h2>
+          <p className="stack-note" style={{ maxWidth: 520 }}>
+            Student-built, seriously considered. Every service reflects real skills
+            practiced through shipped projects and coursework.
+          </p>
 
-    {/* Service Cards */}
-    <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20, marginBottom: 48 }}>
-      {[
-        {
-          num: "01",
-          icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E2A4C4" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>,
-          title: "UI/UX Design",
-          sub: "Interfaces that make sense.",
-          desc: "I design clean, user-centered interfaces using Figma, from wireframes and user flows to polished high-fidelity mockups. Every layout decision is grounded in usability, not just aesthetics.",
-          bullets: ["Wireframes", "Case Studies", "User Flows", "Figma Prototypes"],
-        },
-        {
-          num: "02",
-          icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E2A4C4" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>,
-          title: "Frontend Development",
-          sub: "Designs turned into real code.",
-          desc: "I build responsive, accessible interfaces using React, JavaScript, HTML, and CSS. I focus on writing clean, maintainable code that accurately translates design into working components.",
-          bullets: ["React Components", "Responsive Layouts", "CSS Animations", "Clean Codebase"],
-        },
-        {
-          num: "03",
-          icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E2A4C4" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>,
-          title: "Full-Stack Development",
-          sub: "End-to-end web solutions.",
-          desc: "I build complete web applications with Spring Boot REST APIs and MySQL on the backend, paired with React on the frontend, role-based systems, dashboards, and more.",
-          bullets: ["Spring Boot APIs", "MySQL Databases", "REST Architecture", "Role-Based Access"],
-        },
-      ].map((s) => (
-        <div key={s.num} className="glass-card" style={{ padding: 28, display: "flex", flexDirection: "column", gap: 0 }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 20 }}>
-            <div style={{ width: 44, height: 44, borderRadius: 12, background: "rgba(226,164,196,0.08)", border: "1px solid rgba(226,164,196,0.2)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              {s.icon}
-            </div>
-            <span style={{ fontSize: 13, fontWeight: 700, color: "rgba(226,164,196,0.25)", fontFamily: "monospace" }}>{s.num}</span>
+          <div className="services-grid">
+            {SERVICES.map((s) => (
+              <div key={s.title} className="service-card">
+                <h3 className="service-title">{s.title}</h3>
+                <div className="service-sub">{s.sub}</div>
+                <p className="service-desc">{s.desc}</p>
+                <div className="service-bullets">
+                  {s.bullets.map((b) => (
+                    <div key={b}>— {b}</div>
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
 
-          <h3 style={{ fontSize: 18, fontWeight: 700, color: "#EDE8F5", marginBottom: 4 }}>{s.title}</h3>
-          <p style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", color: "#E2A4C4", marginBottom: 16 }}>{s.sub}</p>
-          <div style={{ width: "100%", height: 1, background: "rgba(226,164,196,0.1)", marginBottom: 16 }} />
-          <p style={{ fontSize: 13, color: "#9A8DB0", lineHeight: 1.7, marginBottom: 20, flex: 1 }}>{s.desc}</p>
-
-          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-            {s.bullets.map(b => (
-              <div key={b} style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <div style={{ width: 4, height: 4, borderRadius: "50%", background: "#E2A4C4", flexShrink: 0 }} />
-                <span style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "#9A8DB0" }}>{b}</span>
+          <p className="stack-note">
+            <span className="badge-shipped">Shipped</span> &nbsp;used in deployed projects
+            &nbsp;·&nbsp; <span className="badge-learning">Learning</span> &nbsp;actively studying
+          </p>
+          <div className="stack-grid">
+            {STACK.map((s) => (
+              <div key={s.cat}>
+                <div className="stack-cat">{s.cat}</div>
+                {s.items.map((item) => (
+                  <div key={item.name} className="stack-row">
+                    <span>{item.name}</span>
+                    <span className={item.level === "Shipped" ? "badge-shipped" : "badge-learning"}>
+                      {item.level}
+                    </span>
+                  </div>
+                ))}
               </div>
             ))}
           </div>
         </div>
-      ))}
-    </div>
-
-    {/* Tech Stack below */}
-    <div style={{ borderTop: "1px solid rgba(226,164,196,0.08)", paddingTop: 48 }}>
-      <p style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.18em", textTransform: "uppercase", color: "#9A8DB0", marginBottom: 24 }}>
-        Tools & Technologies
-      </p>
-      <p style={{ fontSize: 13, color: "#9A8DB0", marginBottom: 28 }}>
-        <span style={{ color: "#5DCAA5" }}>● Shipped</span> = used in production projects &nbsp;·&nbsp; <span style={{ color: "#FAC775" }}>● Learning</span> = actively studying
-      </p>
-      <div className="stack-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 20 }}>
-        {STACK.map(s => (
-          <div key={s.cat} className="glass-card" style={{ padding: 20 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
-              {s.icon}
-              <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "#E2A4C4" }}>{s.cat}</div>
-            </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-              {s.items.map(item => (
-                <div key={item.name} className="stack-item">
-                  <span>{item.name}</span>
-                  <span className={item.level === "Shipped" ? "stack-badge-shipped" : "stack-badge-learning"}>{item.level}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-
-  </div>
-</section>
+      </section>
 
       {/* ─── CERTIFICATIONS ─── */}
-<section id="certifications" style={{ padding: "0 60px 80px", position: "relative", zIndex: 1 }}>
-  <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-    <div style={{ borderTop: "1px solid rgba(226,164,196,0.08)", paddingTop: 48 }}>
-      <span className="section-label">Certifications</span>
-      <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-        {[
-          { name: "AI Ready ASEAN", issuer: "ASEAN Foundation & Google.org", year: "2025" },
-          { name: "Data Visualization", issuer: "Kaggle", year: "2025" },
-          { name: "Java OOP Certification", issuer: "CodeChum · CITU", year: "2025" },
-          { name: "ICT Congress", issuer: "PSITE Cebu", year: "2026" },
-        ].map((cert) => (
-          <div key={cert.name} style={{
-            display: "flex", alignItems: "center", gap: 14,
-            background: "linear-gradient(135deg, rgba(30,24,51,0.7), rgba(23,18,42,0.5))",
-            border: "1px solid rgba(226,164,196,0.12)",
-            borderRadius: 12, padding: "14px 20px",
-            transition: "border-color 0.2s",
-            cursor: "default",
-          }}
-            onMouseEnter={e => e.currentTarget.style.borderColor = "rgba(226,164,196,0.3)"}
-            onMouseLeave={e => e.currentTarget.style.borderColor = "rgba(226,164,196,0.12)"}
-          >
-            <div style={{ width: 8, height: 8, borderRadius: "50%", background: "linear-gradient(135deg, #E2A4C4, #9A6B8A)", flexShrink: 0 }} />
-            <div>
-              <div style={{ fontSize: 13, fontWeight: 600, color: "#EDE8F5", marginBottom: 2 }}>{cert.name}</div>
-              <div style={{ fontSize: 11, color: "#9A8DB0" }}>{cert.issuer} · {cert.year}</div>
-            </div>
+      <section id="certifications">
+        <div className="wrap">
+          <div className="eyebrow">Certifications</div>
+          <div>
+            {CERTS.map((c) => (
+              <div key={c.name} className="cert-row">
+                <span className="cert-year">{c.year}</span>
+                <span className="cert-name">{c.name}</span>
+                <span className="cert-issuer">{c.issuer}</span>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
-    </div>
-  </div>
-</section>
+        </div>
+      </section>
 
       {/* ─── CONTACT ─── */}
-      <section id="contact" style={{ padding: "80px 60px 100px", position: "relative", zIndex: 1 }}>
-        <div style={{ maxWidth: 640, margin: "0 auto", textAlign: "center" }}>
-          <span className="section-label">Contact</span>
-          <h2 style={{ fontSize: 44, fontWeight: 800, color: "#EDE8F5", letterSpacing: "-0.02em", marginBottom: 14, fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
-            Let's build something <span className="gradient-text">together</span>
-          </h2>
-          <p style={{ fontSize: 14, color: "#9A8DB0", marginBottom: 48, lineHeight: 1.7 }}>
-            Open for freelance projects, and collaborations. Pick whatever works best for you — I respond within 24 hours.
-          </p>
-
-          <div style={{ display: "flex", flexDirection: "column", gap: 14, marginBottom: 40 }}>
-
-            {/* Email */}
-            <a href="mailto:cararagtrisharaye@gmail.com" style={{ textDecoration: "none" }}>
-              <div className="glass-card" style={{ padding: "22px 28px", display: "flex", alignItems: "center", gap: 20, textAlign: "left" }}>
-                <div style={{ width: 48, height: 48, borderRadius: 14, background: "rgba(226,164,196,0.1)", border: "1px solid rgba(226,164,196,0.25)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#E2A4C4" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                    <polyline points="22,6 12,13 2,6"/>
-                  </svg>
-                </div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: 15, fontWeight: 700, color: "#EDE8F5", marginBottom: 3 }}>Send Me an Email</div>
-                  <div style={{ fontSize: 13, color: "#9A8DB0" }}>cararagtrisharaye@gmail.com</div>
-                </div>
-                <div style={{ fontSize: 20, color: "#E2A4C4" }}>↗</div>
-              </div>
-            </a>
-
-            {/* LinkedIn */}
-            <a href="https://www.linkedin.com/in/trisha-raye-cararag/" target="_blank" rel="noreferrer" style={{ textDecoration: "none" }}>
-              <div className="glass-card" style={{ padding: "22px 28px", display: "flex", alignItems: "center", gap: 20, textAlign: "left" }}>
-                <div style={{ width: 48, height: 48, borderRadius: 14, background: "rgba(154,107,138,0.1)", border: "1px solid rgba(154,107,138,0.25)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#9A6B8A" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/>
-                    <rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/>
-                  </svg>
-                </div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: 15, fontWeight: 700, color: "#EDE8F5", marginBottom: 3 }}>Connect on LinkedIn</div>
-                  <div style={{ fontSize: 13, color: "#9A8DB0" }}>linkedin.com/in/trisha-raye-cararag</div>
-                </div>
-                <div style={{ fontSize: 20, color: "#9A6B8A" }}>↗</div>
-              </div>
-            </a>
-
-            {/* GitHub */}
-            <a href="https://github.com/trxshx14" target="_blank" rel="noreferrer" style={{ textDecoration: "none" }}>
-              <div className="glass-card" style={{ padding: "22px 28px", display: "flex", alignItems: "center", gap: 20, textAlign: "left" }}>
-                <div style={{ width: 48, height: 48, borderRadius: 14, background: "rgba(200,184,216,0.08)", border: "1px solid rgba(200,184,216,0.2)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C8B8D8" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/>
-                  </svg>
-                </div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: 15, fontWeight: 700, color: "#EDE8F5", marginBottom: 3 }}>See My Work on GitHub</div>
-                  <div style={{ fontSize: 13, color: "#9A8DB0" }}>github.com/trxshx14</div>
-                </div>
-                <div style={{ fontSize: 20, color: "#C8B8D8" }}>↗</div>
-              </div>
-            </a>
-
+      <section id="contact">
+        <div className="wrap">
+          <div className="eyebrow">Contact</div>
+          <div className="contact-head">
+            <h2 className="h2">
+              Let's build something <span className="v-design">together</span>
+            </h2>
+            <p>
+              Open for freelance projects and collaborations. Pick whatever works
+              best for you — I respond within 24 hours.
+            </p>
           </div>
-
-          {/* Availability pill */}
-          
+          <div className="contact-list">
+            <a href="mailto:cararagtrisharaye@gmail.com" className="contact-row">
+              <span className="ch">Email</span>
+              <span className="addr">cararagtrisharaye@gmail.com</span>
+              <span className="arrow">↗</span>
+            </a>
+            <a href="https://www.linkedin.com/in/trisha-raye-cararag/" target="_blank" rel="noreferrer" className="contact-row">
+              <span className="ch">LinkedIn</span>
+              <span className="addr">in/trisha-raye-cararag</span>
+              <span className="arrow">↗</span>
+            </a>
+            <a href="https://github.com/trxshx14" target="_blank" rel="noreferrer" className="contact-row">
+              <span className="ch">GitHub</span>
+              <span className="addr">github.com/trxshx14</span>
+              <span className="arrow">↗</span>
+            </a>
+          </div>
         </div>
       </section>
 
       {/* ─── FOOTER ─── */}
-      <footer style={{ borderTop: "1px solid rgba(226,164,196,0.08)", padding: "24px 60px", display: "flex", justifyContent: "space-between", alignItems: "center", position: "relative", zIndex: 1 }}>
-        <div style={{ fontSize: 13, color: "#6B5F80" }}>
-          <span style={{ color: "#E2A4C4" }}>&lt;</span>trisha.dev<span style={{ color: "#E2A4C4" }}> /&gt;</span>
-        </div>
-        <div style={{ fontSize: 12, color: "#6B5F80" }}>Designed & Built by Trisha Raye Cararag · 2026</div>
-        <div style={{ display: "flex", gap: 20 }}>
-          {[
-            { label: "GitHub", href: "https://github.com/trxshx14" },
-            { label: "LinkedIn", href: "https://www.linkedin.com/in/trisha-raye-cararag/" },
-            { label: "Email", href: "mailto:cararagtrisharaye@gmail.com" },
-          ].map(s => (
-            <a key={s.label} href={s.href} target="_blank" rel="noreferrer" style={{ fontSize: 12, color: "#6B5F80", cursor: "pointer", transition: "color 0.2s", textDecoration: "none" }} onMouseEnter={e => e.target.style.color = "#E2A4C4"} onMouseLeave={e => e.target.style.color = "#6B5F80"}>{s.label}</a>
-          ))}
+      <footer className="footer">
+        <div className="wrap footer-inner">
+          <span>
+            trisha<em style={{ fontFamily: "var(--serif)", color: "var(--pink)" }}>.dev</em>
+          </span>
+          <span>Designed & built by Trisha Raye Cararag · 2026</span>
+          <div className="footer-links">
+            <a href="https://github.com/trxshx14" target="_blank" rel="noreferrer">GitHub</a>
+            <a href="https://www.linkedin.com/in/trisha-raye-cararag/" target="_blank" rel="noreferrer">LinkedIn</a>
+            <a href="mailto:cararagtrisharaye@gmail.com">Email</a>
+          </div>
         </div>
       </footer>
+
       <PortfolioChat />
     </div>
-    
   );
 }
