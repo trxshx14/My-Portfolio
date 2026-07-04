@@ -1,9 +1,19 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { WORKS } from "./projectsData";
 
 export default function ProjectsPage() {
   const location = useLocation();
+  const [theme, setTheme] = useState(() => {
+    const saved = localStorage.getItem("theme");
+    if (saved) return saved;
+    return window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  });
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    localStorage.setItem("theme", theme);
+  }, [theme]);
 
   // Scroll to the project targeted by the hash (e.g. /projects#aura-beauty)
   useEffect(() => {
@@ -36,10 +46,34 @@ export default function ProjectsPage() {
           --faint: #7E7194;
           --line: rgba(226, 164, 196, 0.14);
           --line-strong: rgba(226, 164, 196, 0.32);
+          --nav-bg: rgba(20, 16, 31, 0.9);
           --serif: 'Fraunces', Georgia, serif;
           --sans: 'Outfit', system-ui, sans-serif;
           --mono: 'JetBrains Mono', ui-monospace, monospace;
         }
+
+        :root[data-theme="light"] {
+          --ink: #FBF7F4;
+          --ink-2: #F3E7E1;
+          --pink: #B3547F;
+          --rose: #99416B;
+          --lavender: #7A5E86;
+          --text: #2B2927;
+          --muted: #6E6259;
+          --faint: #85756B;
+          --line: rgba(43, 41, 39, 0.12);
+          --line-strong: rgba(179, 84, 127, 0.35);
+          --nav-bg: rgba(251, 247, 244, 0.9);
+        }
+
+        .theme-btn {
+          background: none; border: 1px solid var(--line-strong); border-radius: 4px;
+          width: 38px; height: 38px; flex-shrink: 0;
+          display: inline-flex; align-items: center; justify-content: center;
+          cursor: pointer; color: var(--muted);
+          transition: color 0.2s, border-color 0.2s;
+        }
+        .theme-btn:hover { color: var(--pink); border-color: var(--pink); }
 
         html { scroll-behavior: smooth; }
         html, body, #root { width: 100%; background: var(--ink); }
@@ -52,6 +86,8 @@ export default function ProjectsPage() {
           min-height: 100vh;
           line-height: 1.6;
         }
+
+        .projects-page h1, .projects-page h2, .projects-page h3 { color: var(--text); }
 
         ::selection { background: var(--pink); color: var(--ink); }
 
@@ -69,7 +105,7 @@ export default function ProjectsPage() {
         .pp-nav {
           position: sticky; top: 0; z-index: 100;
           height: 68px; display: flex; align-items: center;
-          background: rgba(20, 16, 31, 0.9);
+          background: var(--nav-bg);
           backdrop-filter: blur(14px);
           -webkit-backdrop-filter: blur(14px);
           border-bottom: 1px solid var(--line);
@@ -175,7 +211,25 @@ export default function ProjectsPage() {
           <Link to="/" className="pp-logo">
             trisha<em>.dev</em>
           </Link>
-          <Link to="/" className="pp-back">← Back to home</Link>
+          <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
+            <button
+              className="theme-btn"
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+            >
+              {theme === "dark" ? (
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="4" />
+                  <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+                </svg>
+              ) : (
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
+                </svg>
+              )}
+            </button>
+            <Link to="/" className="pp-back">← Back to home</Link>
+          </div>
         </div>
       </nav>
 

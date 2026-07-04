@@ -4,7 +4,67 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/portfolioicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Trisha Raye Cararag — Portfolio</title>
+    <title>Trisha Raye Cararag — Frontend Developer & UX/UI Designer</title>
+
+    <!-- SEO -->
+    <meta
+      name="description"
+      content="Trisha Raye Cararag — Frontend Developer & UX/UI Designer in Cebu, Philippines. I take products from Figma prototype to deployed code: React, Next.js, TypeScript, Spring Boot, and immersive 3D web experiences."
+    />
+    <link rel="canonical" href="https://trisha-cararag-portfolio.vercel.app/" />
+
+    <!-- Open Graph (LinkedIn, Facebook, Messenger link previews) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://trisha-cararag-portfolio.vercel.app/" />
+    <meta property="og:title" content="Trisha Raye Cararag — Frontend Developer & UX/UI Designer" />
+    <meta
+      property="og:description"
+      content="A builder who designs, a designer who ships. Portfolio featuring Aura Beauty, AttendMe, and Cozy Pomodoro — from Figma prototype to deployed code."
+    />
+    <meta property="og:image" content="https://trisha-cararag-portfolio.vercel.app/og-preview.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+
+    <!-- Twitter/X card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Trisha Raye Cararag — Frontend Developer & UX/UI Designer" />
+    <meta
+      name="twitter:description"
+      content="A builder who designs, a designer who ships. From Figma prototype to deployed code."
+    />
+    <meta name="twitter:image" content="https://trisha-cararag-portfolio.vercel.app/og-preview.png" />
+
+    <!-- Browser chrome color per theme -->
+    <meta name="theme-color" content="#14101F" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#FBF7F4" media="(prefers-color-scheme: light)" />
+
+    <!-- Fonts: loaded here (not via CSS @import in JS) so they start downloading immediately -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Outfit:wght@300..700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Theme init: runs before first paint so there's no flash of the wrong theme -->
+    <script>
+      (function () {
+        try {
+          var theme = localStorage.getItem("theme");
+          if (!theme) {
+            theme = window.matchMedia("(prefers-color-scheme: light)").matches
+              ? "light"
+              : "dark";
+          }
+          document.documentElement.dataset.theme = theme;
+          document.documentElement.style.background =
+            theme === "light" ? "#FBF7F4" : "#14101F";
+        } catch (e) {
+          document.documentElement.dataset.theme = "dark";
+          document.documentElement.style.background = "#14101F";
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

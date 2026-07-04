@@ -53,10 +53,24 @@ const STACK = [
 
 const EXPERIENCE = [
   {
+    year: "2026",
+    role: "Frontend Engineer & Designer",
+    org: "Aura Beauty · Portfolio Project",
+    desc: "Built an immersive 3D product showcase with Next.js, TypeScript, React Three Fiber, and GSAP ScrollTrigger — scroll-synced WebGL, custom physical materials, and a decoupled scrollytelling architecture.",
+    type: "project",
+  },
+  {
+    year: "2026 — Present",
+    role: "Full-Stack Developer",
+    org: "AttendMe · Academic Project",
+    desc: "Architected REST APIs with Spring Boot and MySQL for a role-based attendance management system.",
+    type: "project",
+  },
+  {
     year: "2024 — 2026",
-    role: "BS Information Technology",
+    role: "BS Information Technology · 4th Year",
     org: "Cebu Institute of Technology University · Cebu, Philippines",
-    desc: "Full-stack development, UI/UX design, and software engineering principles.",
+    desc: "Studying full-stack development, UI/UX design, and software engineering principles.",
     type: "edu",
   },
   {
@@ -107,12 +121,80 @@ export default function Portfolio() {
   const [activeNav, setActiveNav] = useState("Home");
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [theme, setTheme] = useState(() => {
+    const saved = localStorage.getItem("theme");
+    if (saved) return saved;
+    return window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  });
+  const progressRef = useRef(null);
+  const portraitRef = useRef(null);
 
+  // Apply + persist theme
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 30);
+    document.documentElement.dataset.theme = theme;
+    localStorage.setItem("theme", theme);
+  }, [theme]);
+
+  // Nav background + scroll progress bar (ref-based: no re-renders per pixel)
+  useEffect(() => {
+    const onScroll = () => {
+      setScrolled(window.scrollY > 30);
+      if (progressRef.current) {
+        const max = document.documentElement.scrollHeight - window.innerHeight;
+        const p = max > 0 ? window.scrollY / max : 0;
+        progressRef.current.style.transform = `scaleX(${p})`;
+      }
+    };
+    onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  // Scroll-reveal: fade content blocks up as they enter the viewport
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const groups = [
+      ".site section:not(#home) .wrap > *:not(.works-list):not(.timeline)",
+      ".works-list .work-row",
+      ".timeline .tl-item",
+      ".services-grid .service-card",
+    ];
+    const els = document.querySelectorAll(groups.join(", "));
+    els.forEach((el, i) => {
+      el.classList.add("reveal");
+      el.style.transitionDelay = `${(i % 3) * 0.07}s`;
+    });
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("in");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { rootMargin: "0px 0px -8% 0px", threshold: 0.05 }
+    );
+    els.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
+
+  // Portrait tilt — desktop pointers only, direct style writes (no re-renders)
+  const tiltEnabled = () =>
+    window.matchMedia("(pointer: fine)").matches &&
+    !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  const onPortraitMove = (e) => {
+    const el = portraitRef.current;
+    if (!el || !tiltEnabled()) return;
+    const r = el.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width - 0.5;
+    const y = (e.clientY - r.top) / r.height - 0.5;
+    el.style.transform = `perspective(900px) rotateY(${x * 6}deg) rotateX(${-y * 6}deg)`;
+  };
+  const onPortraitLeave = () => {
+    if (portraitRef.current) portraitRef.current.style.transform = "";
+  };
 
   useEffect(() => {
     const sectionIds = NAV_LINKS.map((link) => link.toLowerCase());
@@ -164,12 +246,56 @@ export default function Portfolio() {
           --faint: #7E7194;
           --line: rgba(226, 164, 196, 0.14);
           --line-strong: rgba(226, 164, 196, 0.32);
+          --nav-bg: rgba(20, 16, 31, 0.9);
           --green: #5DCAA5;
           --amber: #FAC775;
           --serif: 'Fraunces', Georgia, serif;
           --sans: 'Outfit', system-ui, sans-serif;
           --mono: 'JetBrains Mono', ui-monospace, monospace;
         }
+
+        /* Light theme — warm cream palette borrowed from Aura Beauty */
+        :root[data-theme="light"] {
+          --ink: #FBF7F4;
+          --ink-2: #F3E7E1;
+          --pink: #B3547F;
+          --rose: #99416B;
+          --lavender: #7A5E86;
+          --text: #2B2927;
+          --muted: #6E6259;
+          --faint: #85756B;
+          --line: rgba(43, 41, 39, 0.12);
+          --line-strong: rgba(179, 84, 127, 0.35);
+          --nav-bg: rgba(251, 247, 244, 0.9);
+          --green: #1F8A66;
+          --amber: #A8730F;
+        }
+
+        /* ── scroll reveal ── */
+        .reveal {
+          opacity: 0;
+          transform: translateY(26px);
+          transition: opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1), transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+        }
+        .reveal.in { opacity: 1; transform: none; }
+
+        /* ── scroll progress ── */
+        .scroll-progress {
+          position: fixed; top: 0; left: 0; right: 0; height: 2px; z-index: 101;
+          background: linear-gradient(90deg, var(--pink), var(--rose));
+          transform-origin: 0 50%;
+          transform: scaleX(0);
+        }
+
+        /* ── theme toggle ── */
+        .theme-btn {
+          background: none; border: 1px solid var(--line-strong); border-radius: 4px;
+          width: 38px; height: 38px; flex-shrink: 0;
+          display: inline-flex; align-items: center; justify-content: center;
+          cursor: pointer; color: var(--muted);
+          transition: color 0.2s, border-color 0.2s;
+        }
+        .theme-btn:hover { color: var(--pink); border-color: var(--pink); }
 
         html { scroll-behavior: smooth; }
         html, body, #root { width: 100%; background: var(--ink); }
@@ -183,6 +309,9 @@ export default function Portfolio() {
           overflow-x: hidden;
           line-height: 1.6;
         }
+
+        /* Defensive: beat any global h1/h2 color rules leaking from other components */
+        .site h1, .site h2, .site h3, .site h4 { color: var(--text); }
 
         ::selection { background: var(--pink); color: var(--ink); }
 
@@ -238,7 +367,7 @@ export default function Portfolio() {
           transition: background 0.3s, border-color 0.3s;
         }
         .nav.scrolled {
-          background: rgba(20, 16, 31, 0.9);
+          background: var(--nav-bg);
           backdrop-filter: blur(14px);
           -webkit-backdrop-filter: blur(14px);
           border-bottom-color: var(--line);
@@ -333,7 +462,11 @@ export default function Portfolio() {
         .hero-meta .num { font-family: var(--serif); font-size: 30px; color: var(--pink); line-height: 1.1; }
         .hero-meta .lbl { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--faint); margin-top: 4px; }
 
-        .portrait-frame { position: relative; justify-self: end; }
+        .portrait-frame {
+          position: relative; justify-self: end;
+          transition: transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
+          will-change: transform;
+        }
         .portrait {
           width: min(360px, 100%);
           aspect-ratio: 4 / 5;
@@ -508,6 +641,9 @@ export default function Portfolio() {
         }
       `}</style>
 
+      {/* ─── SCROLL PROGRESS ─── */}
+      <div className="scroll-progress" ref={progressRef} aria-hidden="true" />
+
       {/* ─── NAV ─── */}
       <nav className={`nav${scrolled ? " scrolled" : ""}`}>
         <div className="wrap nav-inner">
@@ -526,6 +662,23 @@ export default function Portfolio() {
             ))}
           </div>
           <div className="nav-cta">
+            <button
+              className="theme-btn"
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+              title={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+            >
+              {theme === "dark" ? (
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="4" />
+                  <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+                </svg>
+              ) : (
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
+                </svg>
+              )}
+            </button>
             <a href="/Cararag_Resume_IT.pdf" target="_blank" rel="noreferrer" className="btn btn-ghost">
               Resume
             </a>
@@ -595,7 +748,12 @@ export default function Portfolio() {
             </div>
           </div>
 
-          <div className="portrait-frame rise d2">
+          <div
+            className="portrait-frame rise d2"
+            ref={portraitRef}
+            onMouseMove={onPortraitMove}
+            onMouseLeave={onPortraitLeave}
+          >
             <img className="portrait" src="/Trisha-profile.jpg" alt="Trisha Raye Cararag" />
             <div className="portrait-caption">Cebu, Philippines · GMT+8 · she/her</div>
           </div>
