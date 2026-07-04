@@ -1,61 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import PortfolioChat from "./PortfolioChat";
+import { WORKS } from "./projectsData";
 
 const NAV_LINKS = ["Home", "About", "Works", "Experience", "Services", "Contact"];
-
-const WORKS = [
-  {
-    title: "Aura Beauty",
-    type: "3D Web Experience",
-    role: "Frontend Engineer & Designer",
-    year: "2026",
-    pipeline: "Figma → Next.js + R3F + GSAP → Vercel",
-    problem: "Static product photos can't convey a cosmetic product's texture, formulation, or feel online.",
-    desc: "Immersive scrollytelling showcase for a premium cosmetics brand — a scroll-synced WebGL product that rotates and morphs through the story, with custom frosted-glass shader materials, cursor-tracking physics, and real-time shade tinting at 60 FPS.",
-    tags: ["Next.js", "TypeScript", "React Three Fiber", "GSAP", "Tailwind CSS"],
-    github: "https://github.com/trxshx14/aura-beauty",
-    demo: "https://aura-beauty-omega.vercel.app/",
-  },
-  {
-    title: "AttendMe",
-    type: "Full-Stack App",
-    role: "Full-Stack Developer",
-    year: "2026",
-    pipeline: "Figma → React + Spring Boot → Render",
-    problem: "Manual attendance tracking is error-prone and time-consuming for instructors.",
-    desc: "Attendance management system with REST API architecture and role-based access control for school admins and teachers.",
-    tags: ["React", "Spring Boot", "MySQL", "Android"],
-    github: "https://github.com/trxshx14/IT342-Cararag-AttendMe",
-    demo: "https://attendme-frontend.onrender.com/login",
-    apk: "/AttendMe.apk",
-    caseStudy: "/attendme-case-study",
-  },
-  {
-    title: "Cozy Pomodoro",
-    type: "Frontend App",
-    role: "Frontend Developer & Designer",
-    year: "2025",
-    pipeline: "Figma → React + Tailwind → Vercel",
-    problem: "Students and professionals struggle with distraction and burnout during long study or work sessions.",
-    desc: "Productivity-focused Pomodoro timer with a soft, lofi-inspired interface designed for focused work and mindful breaks.",
-    tags: ["React", "Tailwind CSS"],
-    github: "https://github.com/trxshx14/CozyPomodoro",
-    demo: "https://cozypomodoro-by-trishadev.vercel.app/",
-    caseStudy: "/cozy-pomodoro-case-study",
-  },
-  {
-    title: "GlossFile",
-    type: "Mobile App",
-    role: "Android Developer & Designer",
-    year: "2025",
-    pipeline: "Figma → Kotlin + Firebase → Android",
-    problem: "Beauty products expire quietly — most people have no easy way to track what's still safe to use.",
-    desc: "Native Android app for tracking product expiration dates, building custom palettes, and organizing a beauty routine.",
-    tags: ["Kotlin", "Firebase", "Android Studio"],
-    github: "https://github.com/trxshx14/GlossFile",
-  },
-];
 
 const STACK = [
   {
@@ -105,24 +53,10 @@ const STACK = [
 
 const EXPERIENCE = [
   {
-    year: "2026",
-    role: "Frontend Engineer & Designer",
-    org: "Aura Beauty · Portfolio Project",
-    desc: "Built an immersive 3D product showcase with Next.js, TypeScript, React Three Fiber, and GSAP ScrollTrigger — scroll-synced WebGL, custom physical materials, and a decoupled scrollytelling architecture.",
-    type: "project",
-  },
-  {
-    year: "2026 — Present",
-    role: "Full-Stack Developer",
-    org: "AttendMe · Academic Project",
-    desc: "Architected REST APIs with Spring Boot and MySQL for a role-based attendance management system.",
-    type: "project",
-  },
-  {
     year: "2024 — 2026",
-    role: "BS Information Technology · 4th Year",
+    role: "BS Information Technology",
     org: "Cebu Institute of Technology University · Cebu, Philippines",
-    desc: "Studying full-stack development, UI/UX design, and software engineering principles.",
+    desc: "Full-stack development, UI/UX design, and software engineering principles.",
     type: "edu",
   },
   {
@@ -437,40 +371,40 @@ export default function Portfolio() {
         .fact .v { font-size: 14.5px; color: var(--text); text-align: right; }
 
         /* ── works ── */
-        .works-head { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 48px; gap: 20px; flex-wrap: wrap; }
-        .works-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
-        .work-card {
-          background: var(--ink);
-          padding: 32px 28px;
-          display: flex; flex-direction: column;
-          transition: background 0.25s;
+        .works-head { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 56px; gap: 20px; flex-wrap: wrap; }
+        .works-list { border-top: 1px solid var(--line); }
+        .work-row {
+          display: grid;
+          grid-template-columns: 150px 1fr auto;
+          gap: 40px;
+          align-items: center;
+          padding: 44px 0;
+          border-bottom: 1px solid var(--line);
+          text-decoration: none;
+          transition: padding-left 0.3s cubic-bezier(0.2, 0.7, 0.2, 1);
         }
-        .work-card:hover { background: var(--ink-2); }
-        .work-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
-        .work-year { font-family: var(--mono); font-size: 12px; color: var(--faint); }
-        .work-type { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--rose); }
-        .work-title { font-family: var(--serif); font-weight: 450; font-size: 27px; letter-spacing: -0.01em; margin-bottom: 4px; }
-        .work-role { font-size: 13px; color: var(--muted); margin-bottom: 18px; }
-        .work-pipeline {
-          font-family: var(--mono); font-size: 11.5px; color: var(--lavender);
-          background: rgba(226, 164, 196, 0.06);
-          border-left: 2px solid var(--pink);
-          padding: 9px 12px; margin-bottom: 18px;
-          line-height: 1.5;
-        }
-        .work-problem { font-size: 13.5px; color: var(--muted); line-height: 1.6; margin-bottom: 12px; }
-        .work-problem .k { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--rose); display: block; margin-bottom: 4px; }
-        .work-desc { font-size: 13.5px; color: var(--muted); line-height: 1.65; margin-bottom: 20px; flex: 1; }
-        .work-tags { font-family: var(--mono); font-size: 11.5px; color: var(--faint); margin-bottom: 22px; }
-        .work-links { display: flex; gap: 18px; flex-wrap: wrap; border-top: 1px solid var(--line); padding-top: 16px; }
-        .work-link {
-          font-family: var(--mono); font-size: 12px; color: var(--muted);
-          text-decoration: none; background: none; border: none; cursor: pointer; padding: 0;
+        .work-row:hover { padding-left: 18px; }
+        .work-meta { display: flex; flex-direction: column; gap: 6px; }
+        .work-year { font-family: var(--mono); font-size: 12.5px; color: var(--faint); }
+        .work-type { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--rose); line-height: 1.5; }
+        .work-title {
+          font-family: var(--serif); font-weight: 420;
+          font-size: clamp(28px, 3.6vw, 40px);
+          letter-spacing: -0.01em; line-height: 1.1;
+          color: var(--text); margin-bottom: 8px;
           transition: color 0.2s;
         }
-        .work-link:hover { color: var(--pink); }
-        .work-link.primary { color: var(--pink); }
-        .work-link.primary:hover { color: var(--text); }
+        .work-row:hover .work-title { color: var(--pink); }
+        .work-tagline { font-size: 15px; color: var(--muted); margin-bottom: 10px; max-width: 520px; }
+        .work-tags { font-family: var(--mono); font-size: 11.5px; color: var(--faint); }
+        .work-arrow {
+          font-family: var(--serif);
+          font-size: 34px;
+          color: var(--faint);
+          transition: color 0.2s, transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1);
+        }
+        .work-row:hover .work-arrow { color: var(--pink); transform: translateX(8px); }
+        .works-foot { margin-top: 40px; }
 
         /* ── experience ── */
         .timeline { border-left: 1px solid var(--line); margin-left: 5px; }
@@ -549,7 +483,11 @@ export default function Portfolio() {
 
         /* ── responsive ── */
         @media (max-width: 900px) {
-          .works-grid, .services-grid { grid-template-columns: 1fr; }
+          .services-grid { grid-template-columns: 1fr; }
+          .work-row { grid-template-columns: 1fr auto; }
+          .work-meta { flex-direction: row; gap: 14px; align-items: baseline; grid-column: 1; margin-bottom: 2px; }
+          .work-row > div:nth-child(2) { grid-column: 1; }
+          .work-arrow { grid-column: 2; grid-row: 1 / span 2; align-self: center; }
           .stack-grid { grid-template-columns: repeat(2, 1fr); }
           .hero { grid-template-columns: 1fr; gap: 48px; padding-top: 110px; min-height: 0; padding-bottom: 80px; }
           .portrait-frame { justify-self: start; }
@@ -643,7 +581,7 @@ export default function Portfolio() {
             </div>
             <div className="hero-meta rise d4">
               <div>
-                <div className="num">4</div>
+                <div className="num">3</div>
                 <div className="lbl">Projects shipped</div>
               </div>
               <div>
@@ -723,44 +661,26 @@ export default function Portfolio() {
             </a>
           </div>
 
-          <div className="works-grid">
+          <div className="works-list">
             {WORKS.map((w) => (
-              <article key={w.title} className="work-card">
-                <div className="work-top">
-                  <span className="work-type">{w.type}</span>
+              <Link key={w.slug} to={`/projects#${w.slug}`} className="work-row" aria-label={`View ${w.title} project details`}>
+                <div className="work-meta">
                   <span className="work-year">{w.year}</span>
+                  <span className="work-type">{w.type}</span>
                 </div>
-                <h3 className="work-title">{w.title}</h3>
-                <div className="work-role">{w.role}</div>
-                <div className="work-pipeline">{w.pipeline}</div>
-                <div className="work-problem">
-                  <span className="k">Problem</span>
-                  {w.problem}
+                <div>
+                  <h3 className="work-title">{w.title}</h3>
+                  <p className="work-tagline">{w.tagline}</p>
+                  <div className="work-tags">{w.tags.join(" · ")}</div>
                 </div>
-                <p className="work-desc">{w.desc}</p>
-                <div className="work-tags">{w.tags.join(" · ")}</div>
-                <div className="work-links">
-                  {w.caseStudy && (
-                    <Link to={w.caseStudy} className="work-link primary">
-                      Case study →
-                    </Link>
-                  )}
-                  {w.demo && (
-                    <a href={w.demo} target="_blank" rel="noreferrer" className="work-link">
-                      Live demo ↗
-                    </a>
-                  )}
-                  <a href={w.github} target="_blank" rel="noreferrer" className="work-link">
-                    GitHub ↗
-                  </a>
-                  {w.apk && (
-                    <a href={w.apk} download className="work-link">
-                      APK ↓
-                    </a>
-                  )}
-                </div>
-              </article>
+                <span className="work-arrow" aria-hidden="true">→</span>
+              </Link>
             ))}
+          </div>
+          <div className="works-foot">
+            <Link to="/projects" className="btn btn-ghost">
+              View all projects →
+            </Link>
           </div>
         </div>
       </section>
