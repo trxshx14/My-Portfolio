@@ -23,39 +23,28 @@ const STACK_FEED = [
 
 const EXPERIENCE = [
   {
-    year: "2026",
-    role: "Frontend Engineer & Designer",
-    org: "Aura Beauty · Portfolio Project",
-    desc: "Built an immersive 3D product showcase with Next.js, TypeScript, React Three Fiber, and GSAP ScrollTrigger — scroll-synced WebGL, custom physical materials, and a decoupled scrollytelling architecture.",
-    type: "project",
+    kicker: "Since 1st year",
+    role: "Information Technology Student",
+    org: "Cebu Institute of Technology-University · Cebu, Philippines",
+    tags: ["4th year", "Design + Code", "UX/UI Focus"],
+    card: "IT student by degree, Frontend Developer by practice. Since my first year, I’ve been turning complex logic, OOP, and database structures into highly interactive, beautifully designed, and fully deployed web applications",
+    tech: ["Java", "Python", "MySQL", "Data Structures"],
   },
   {
-    year: "2026 — Present",
-    role: "Full-Stack Developer",
-    org: "AttendMe · Academic Project",
-    desc: "Architected REST APIs with Spring Boot and MySQL for a role-based attendance management system.",
-    type: "project",
+    kicker: "2 years shipping",
+    role: "Frontend Developer & UX/UI Designer",
+    org: "Self-directed · personal & academic projects",
+    tags: ["Figma → Code", "Web + Mobile", "3 Shipped"],
+    card: "Figma first, always, then React and Tailwind on the web, Kotlin on Android, Spring Boot and MySQL behind AttendMe, and R3F + GSAP for Aura Beauty's 3D storytelling. I own the whole pipeline, from wireframe to deploy.",
+    tech: ["React", "Next.js", "Spring Boot", "Kotlin", "Figma"],
   },
   {
-    year: "2024 — 2026",
-    role: "BS Information Technology · 4th Year",
-    org: "Cebu Institute of Technology University · Cebu, Philippines",
-    desc: "Studying full-stack development, UI/UX design, and software engineering principles.",
-    type: "edu",
-  },
-  {
-    year: "2021 — 2023",
-    role: "Senior High School",
-    org: "Colegio de la Inmaculada Concepcion · Cebu",
-    desc: "Completed Senior High School at CIC Cebu.",
-    type: "edu",
-  },
-  {
-    year: "2014 — 2020",
-    role: "Junior High School",
-    org: "Colegio de la Inmaculada Concepcion · Cebu",
-    desc: "Completed Junior High School at CIC Cebu.",
-    type: "edu",
+    kicker: "Next",
+    role: "Freelance / Entry-Level Role",
+    org: "Goal · what I'm looking for",
+    tags: ["Open to work", "Remote-ready", "Eager to learn"],
+    card: "Now seeking freelance projects or a first professional role where I can learn from a team, contribute real features, and ship software that people actually use.",
+    tech: ["React", "Tailwind", "Spring Boot", "Figma"],
   },
 ];
 
@@ -124,9 +113,9 @@ export default function Portfolio() {
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const groups = [
-      ".site section:not(#home) .wrap > *:not(.works-list):not(.timeline)",
+      ".site section:not(#home) .wrap > *:not(.works-list):not(.xp-list)",
       ".works-list .work-row",
-      ".timeline .tl-item",
+      ".xp-list .xp-row",
       ".services-grid .service-card",
     ];
     const els = document.querySelectorAll(groups.join(", "));
@@ -510,19 +499,71 @@ export default function Portfolio() {
         .works-foot { margin-top: 40px; }
 
         /* ── experience ── */
-        .timeline { border-left: 1px solid var(--line); margin-left: 5px; }
-        .tl-item { position: relative; padding: 0 0 40px 36px; }
-        .tl-item:last-child { padding-bottom: 0; }
-        .tl-item::before {
-          content: ''; position: absolute; left: -5px; top: 7px;
-          width: 9px; height: 9px; border-radius: 50%;
-          background: var(--ink); border: 1.5px solid var(--rose);
+        .xp-header {
+          display: grid; grid-template-columns: 1.2fr 0.8fr;
+          gap: 48px; align-items: start; margin-bottom: 72px;
         }
-        .tl-item.project::before { background: var(--pink); border-color: var(--pink); }
-        .tl-year { font-family: var(--mono); font-size: 12px; color: var(--faint); margin-bottom: 6px; letter-spacing: 0.04em; }
-        .tl-role { font-family: var(--serif); font-size: 21px; font-weight: 450; margin-bottom: 3px; }
-        .tl-org { font-size: 13.5px; color: var(--pink); margin-bottom: 8px; }
-        .tl-desc { font-size: 14px; color: var(--muted); max-width: 560px; }
+        .xp-header .h2 { margin-bottom: 0; }
+        .xp-intro { font-size: 14.5px; color: var(--muted); line-height: 1.75; text-align: right; padding-top: 8px; }
+
+        .xp-list { position: relative; }
+        .xp-list::before {
+          content: ''; position: absolute; left: 50%; top: 10px; bottom: 10px;
+          width: 1px; transform: translateX(-50%);
+          background: linear-gradient(to bottom, var(--line-strong), var(--line), transparent);
+        }
+        .xp-row {
+          display: grid; grid-template-columns: 1fr 72px 1fr;
+          align-items: start; margin-bottom: 72px; position: relative;
+        }
+        .xp-row:last-child { margin-bottom: 0; }
+        .xp-dot {
+          grid-column: 2; grid-row: 1; justify-self: center; margin-top: 10px;
+          width: 11px; height: 11px; border-radius: 50%;
+          background: var(--pink);
+          box-shadow: 0 0 0 4px var(--ink), 0 0 14px var(--pink);
+          position: relative; z-index: 1;
+        }
+
+        .xp-meta { grid-column: 1; grid-row: 1; text-align: right; padding-top: 2px; }
+        .xp-card { grid-column: 3; grid-row: 1; }
+        .xp-row.flip .xp-meta { grid-column: 3; text-align: left; }
+        .xp-row.flip .xp-card { grid-column: 1; }
+
+        .xp-kicker {
+          font-family: var(--mono); font-size: 11px; font-weight: 500;
+          letter-spacing: 0.16em; text-transform: uppercase; color: var(--faint);
+          margin-bottom: 8px;
+        }
+        .xp-role {
+          font-family: var(--serif); font-weight: 430;
+          font-size: clamp(22px, 2.8vw, 29px);
+          line-height: 1.15; letter-spacing: -0.01em; margin-bottom: 6px;
+        }
+        .xp-org { font-family: var(--mono); font-size: 12px; color: var(--muted); margin-bottom: 16px; }
+        .xp-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+        .xp-row:not(.flip) .xp-tags { justify-content: flex-end; }
+        .xp-row.flip .xp-tags { justify-content: flex-start; }
+        .xp-tag {
+          font-family: var(--mono); font-size: 10px; font-weight: 500;
+          letter-spacing: 0.1em; text-transform: uppercase;
+          color: var(--pink); background: rgba(226, 164, 196, 0.08);
+          border: 1px solid var(--line-strong);
+          padding: 5px 11px; border-radius: 3px;
+        }
+
+        .xp-card-inner {
+          background: var(--ink-2); border: 1px solid var(--line);
+          border-radius: 10px; padding: 24px 26px;
+          transition: border-color 0.25s;
+        }
+        .xp-card-inner:hover { border-color: var(--line-strong); }
+        .xp-card-text { font-size: 14.5px; color: var(--muted); line-height: 1.75; margin-bottom: 18px; }
+        .xp-tech { display: flex; gap: 8px; flex-wrap: wrap; }
+        .xp-tech span {
+          font-family: var(--mono); font-size: 11px; color: var(--muted);
+          border: 1px solid var(--line); border-radius: 4px; padding: 4px 10px;
+        }
 
         /* ── services ── */
         .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); margin-bottom: 72px; }
@@ -634,6 +675,14 @@ export default function Portfolio() {
           .work-meta { flex-direction: row; gap: 14px; align-items: baseline; grid-column: 1; margin-bottom: 2px; }
           .work-row > div:nth-child(2) { grid-column: 1; }
           .work-arrow { grid-column: 2; grid-row: 1 / span 2; align-self: center; }
+          .xp-header { grid-template-columns: 1fr; gap: 20px; }
+          .xp-intro { text-align: left; padding-top: 0; }
+          .xp-list::before { left: 5px; transform: none; }
+          .xp-row, .xp-row.flip { grid-template-columns: 32px 1fr; margin-bottom: 56px; }
+          .xp-dot { grid-column: 1; grid-row: 1; justify-self: start; margin-left: 0; }
+          .xp-meta, .xp-row.flip .xp-meta { grid-column: 2; grid-row: 1; text-align: left; margin-bottom: 18px; }
+          .xp-card, .xp-row.flip .xp-card { grid-column: 2; grid-row: 2; }
+          .xp-row .xp-tags, .xp-row.flip .xp-tags { justify-content: flex-start; }
           .hero { grid-template-columns: 1fr; gap: 48px; padding-top: 110px; min-height: 0; padding-bottom: 80px; }
           .portrait-frame { justify-self: start; }
         }
@@ -724,7 +773,7 @@ export default function Portfolio() {
           <div>
             <div className="hero-kicker rise">
               <span className="dot" />
-              Available for freelance & remote work · Philippines
+              Available for internships & remote work · Philippines
             </div>
             <h1 className="rise d1">
               A builder who <span className="v-design">designs.</span>
@@ -859,17 +908,43 @@ export default function Portfolio() {
       <section id="experience">
         <div className="wrap">
           <div className="eyebrow">Experience & education</div>
-          <h2 className="h2">
-            The <span className="v-design">journey</span> so far
-          </h2>
-          <div style={{ height: 28 }} />
-          <div className="timeline">
-            {EXPERIENCE.map((e) => (
-              <div key={e.year + e.role} className={`tl-item${e.type === "project" ? " project" : ""}`}>
-                <div className="tl-year">{e.year}</div>
-                <div className="tl-role">{e.role}</div>
-                <div className="tl-org">{e.org}</div>
-                <p className="tl-desc">{e.desc}</p>
+          <div className="xp-header">
+            <h2 className="h2">
+              Two years designing,
+              <br />
+              <span className="v-design">shipping</span> the whole way.
+            </h2>
+            <p className="xp-intro">
+              Started designing in Figma in my first year of college and refused to stop at the
+              mockup — picked up React, then the back end, then Android, to ship the whole thing.
+              Now looking for a team to do it with.
+            </p>
+          </div>
+
+          <div className="xp-list">
+            {EXPERIENCE.map((e, i) => (
+              <div key={e.role} className={`xp-row${i % 2 === 1 ? " flip" : ""}`}>
+                <div className="xp-meta">
+                  <div className="xp-kicker">{e.kicker}</div>
+                  <div className="xp-role">{e.role}</div>
+                  <div className="xp-org">{e.org}</div>
+                  <div className="xp-tags">
+                    {e.tags.map((t) => (
+                      <span key={t} className="xp-tag">{t}</span>
+                    ))}
+                  </div>
+                </div>
+                <span className="xp-dot" aria-hidden="true" />
+                <div className="xp-card">
+                  <div className="xp-card-inner">
+                    <p className="xp-card-text">{e.card}</p>
+                    <div className="xp-tech">
+                      {e.tech.map((t) => (
+                        <span key={t}>{t}</span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
@@ -949,21 +1024,6 @@ export default function Portfolio() {
         </div>
       </section>
 
-      {/* ─── CERTIFICATIONS ─── */}
-      <section id="certifications">
-        <div className="wrap">
-          <div className="eyebrow">Certifications</div>
-          <div>
-            {CERTS.map((c) => (
-              <div key={c.name} className="cert-row">
-                <span className="cert-year">{c.year}</span>
-                <span className="cert-name">{c.name}</span>
-                <span className="cert-issuer">{c.issuer}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* ─── CONTACT ─── */}
       <section id="contact">
