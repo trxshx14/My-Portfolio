@@ -5,50 +5,20 @@ import { WORKS } from "./projectsData";
 
 const NAV_LINKS = ["Home", "About", "Works", "Experience", "Services", "Contact"];
 
-const STACK = [
-  {
-    cat: "Frontend",
-    items: [
-      { name: "React", level: "Shipped" },
-      { name: "Next.js", level: "Shipped" },
-      { name: "TypeScript", level: "Shipped" },
-      { name: "JavaScript", level: "Shipped" },
-      { name: "Tailwind CSS", level: "Shipped" },
-    ],
-  },
-  {
-    cat: "Motion & 3D",
-    items: [
-      { name: "React Three Fiber", level: "Shipped" },
-      { name: "GSAP + ScrollTrigger", level: "Shipped" },
-      { name: "Three.js Shaders", level: "Shipped" },
-    ],
-  },
-  {
-    cat: "Backend",
-    items: [
-      { name: "Spring Boot", level: "Shipped" },
-      { name: "REST API", level: "Shipped" },
-      { name: "MySQL", level: "Shipped" },
-      { name: "Supabase", level: "Shipped" },
-    ],
-  },
-  {
-    cat: "Mobile",
-    items: [
-      { name: "Kotlin", level: "Shipped" },
-      { name: "Android Studio", level: "Shipped" },
-      { name: "Firebase", level: "Shipped" },
-    ],
-  },
-  {
-    cat: "Design",
-    items: [
-      { name: "Figma", level: "Shipped" },
-      { name: "Prototyping", level: "Shipped" },
-      { name: "Design Systems", level: "Shipped" },
-    ],
-  },
+const STACK_FEED = [
+  { slug: "react", name: "React", cat: "Framework · Frontend", desc: "Component-driven UIs, hooks, and reusable design-system components.", level: "Shipped" },
+  { slug: "nextdotjs", name: "Next.js", cat: "Framework · Full-Stack", desc: "Server rendering and static generation — powers Aura Beauty.", level: "Shipped" },
+  { slug: "typescript", name: "TypeScript", cat: "Language · Frontend", desc: "Type-safe components and props across the Aura Beauty codebase.", level: "Shipped" },
+  { slug: "javascript", name: "JavaScript", cat: "Language · Core", desc: "The foundation — DOM, async, and everything React sits on.", level: "Shipped" },
+  { slug: "tailwindcss", name: "Tailwind CSS", cat: "Styling", desc: "Utility-first styling with fluid type and responsive constraints.", level: "Shipped" },
+  { slug: "threedotjs", name: "React Three Fiber", cat: "3D · WebGL", desc: "Declarative Three.js scenes, custom physical materials at 60 FPS.", level: "Shipped" },
+  { slug: "greensock", name: "GSAP", cat: "Animation", desc: "ScrollTrigger-driven scrollytelling with smooth scrubbing.", level: "Shipped" },
+  { slug: "springboot", name: "Spring Boot", cat: "Framework · Backend", desc: "REST APIs, JPA, and role-based auth behind AttendMe.", level: "Shipped" },
+  { slug: "mysql", name: "MySQL", cat: "Database", desc: "Relational modeling — students, sessions, and courses with integrity.", level: "Shipped" },
+  { slug: "supabase", name: "Supabase", cat: "Backend · BaaS", desc: "Postgres, auth, and storage without the boilerplate.", level: "Shipped" },
+  { slug: "kotlin", name: "Kotlin", cat: "Language · Mobile", desc: "Native Android development in Android Studio.", level: "Shipped" },
+  { slug: "firebase", name: "Firebase", cat: "Backend · Mobile", desc: "Realtime data and auth for native Android apps.", level: "Shipped" },
+  { slug: "figma", name: "Figma", cat: "Design", desc: "Wireframes, user flows, hi-fi prototypes, and design systems.", level: "Shipped" },
 ];
 
 const EXPERIENCE = [
@@ -570,12 +540,55 @@ export default function Portfolio() {
         }
         .badge-shipped { color: var(--green); border: 1px solid rgba(93, 202, 165, 0.3); }
         .badge-learning { color: var(--amber); border: 1px solid rgba(250, 199, 117, 0.3); }
-        .stack-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 36px; }
-        .stack-cat { font-family: var(--mono); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--pink); padding-bottom: 12px; border-bottom: 1px solid var(--line-strong); margin-bottom: 4px; }
-        .stack-row {
-          display: flex; justify-content: space-between; align-items: center;
-          padding: 10px 0; border-bottom: 1px solid var(--line);
-          font-size: 14px; color: var(--text);
+
+        /* ── stack marquee ── */
+        .feed-head {
+          display: flex; justify-content: space-between; align-items: baseline;
+          margin-bottom: 20px; gap: 16px; flex-wrap: wrap;
+        }
+        .feed-label { font-family: var(--mono); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--rose); }
+        .feed-status { font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--faint); display: flex; align-items: center; gap: 8px; }
+        .feed-status .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
+
+        .marquee {
+          overflow: hidden;
+          -webkit-mask-image: linear-gradient(90deg, transparent, black 7%, black 93%, transparent);
+          mask-image: linear-gradient(90deg, transparent, black 7%, black 93%, transparent);
+          padding: 4px 0;
+        }
+        @keyframes feed-scroll {
+          from { transform: translateX(-50%); }
+          to { transform: translateX(0); }
+        }
+        .marquee-track {
+          display: flex;
+          width: max-content;
+          animation: feed-scroll 55s linear infinite;
+        }
+        .marquee:hover .marquee-track { animation-play-state: paused; }
+
+        .feed-card {
+          width: 264px; flex-shrink: 0;
+          margin-right: 16px;
+          background: var(--ink-2);
+          border: 1px solid var(--line);
+          border-radius: 10px;
+          padding: 20px;
+          transition: border-color 0.25s;
+        }
+        .feed-card:hover { border-color: var(--line-strong); }
+        .feed-card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .feed-logo { width: 26px; height: 26px; object-fit: contain; }
+        .feed-cat { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--faint); }
+        .feed-name { font-family: var(--serif); font-size: 20px; font-weight: 450; margin-bottom: 6px; display: flex; align-items: center; gap: 10px; }
+        .feed-desc { font-size: 12.5px; color: var(--muted); line-height: 1.6; }
+        .feed-hint { font-family: var(--mono); font-size: 11px; color: var(--faint); letter-spacing: 0.06em; margin-top: 18px; }
+
+        @media (prefers-reduced-motion: reduce) {
+          .marquee { -webkit-mask-image: none; mask-image: none; }
+          .marquee-track { animation: none; flex-wrap: wrap; gap: 16px; width: auto; }
+          .feed-card { margin-right: 0; }
+          .feed-card[aria-hidden="true"] { display: none; }
         }
 
         /* ── certifications ── */
@@ -621,7 +634,6 @@ export default function Portfolio() {
           .work-meta { flex-direction: row; gap: 14px; align-items: baseline; grid-column: 1; margin-bottom: 2px; }
           .work-row > div:nth-child(2) { grid-column: 1; }
           .work-arrow { grid-column: 2; grid-row: 1 / span 2; align-self: center; }
-          .stack-grid { grid-template-columns: repeat(2, 1fr); }
           .hero { grid-template-columns: 1fr; gap: 48px; padding-top: 110px; min-height: 0; padding-bottom: 80px; }
           .portrait-frame { justify-self: start; }
         }
@@ -631,7 +643,7 @@ export default function Portfolio() {
           .nav-links, .nav-cta .btn-ghost { display: none; }
           .menu-btn { display: block; }
           .about-grid { grid-template-columns: 1fr; gap: 40px; }
-          .stack-grid { grid-template-columns: 1fr; gap: 28px; }
+          .feed-card { width: 230px; }
           .hero-meta { flex-wrap: wrap; }
           .hero-meta > div { border-right: none; margin-right: 0; padding-right: 0; width: 50%; }
           .cert-row { grid-template-columns: 60px 1fr; }
@@ -895,21 +907,45 @@ export default function Portfolio() {
             <span className="badge-shipped">Shipped</span> &nbsp;used in deployed projects
             &nbsp;·&nbsp; <span className="badge-learning">Learning</span> &nbsp;actively studying
           </p>
-          <div className="stack-grid">
-            {STACK.map((s) => (
-              <div key={s.cat}>
-                <div className="stack-cat">{s.cat}</div>
-                {s.items.map((item) => (
-                  <div key={item.name} className="stack-row">
-                    <span>{item.name}</span>
-                    <span className={item.level === "Shipped" ? "badge-shipped" : "badge-learning"}>
-                      {item.level}
+
+          <div className="feed-head">
+            <span className="feed-label">// stack.feed</span>
+            <span className="feed-status">
+              <span className="dot" />
+              {STACK_FEED.length} modules · streaming
+            </span>
+          </div>
+
+          <div className="marquee" role="region" aria-label="Technology stack">
+            <div className="marquee-track">
+              {[...STACK_FEED, ...STACK_FEED].map((t, i) => (
+                <div
+                  key={`${t.slug}-${i}`}
+                  className="feed-card"
+                  aria-hidden={i >= STACK_FEED.length ? "true" : undefined}
+                >
+                  <div className="feed-card-top">
+                    <img
+                      className="feed-logo"
+                      src={`https://cdn.simpleicons.org/${t.slug}/${theme === "light" ? "B3547F" : "E2A4C4"}`}
+                      alt=""
+                      loading="lazy"
+                      onError={(e) => { e.currentTarget.style.display = "none"; }}
+                    />
+                    <span className="feed-cat">{t.cat}</span>
+                  </div>
+                  <div className="feed-name">
+                    {t.name}
+                    <span className={t.level === "Shipped" ? "badge-shipped" : "badge-learning"}>
+                      {t.level}
                     </span>
                   </div>
-                ))}
-              </div>
-            ))}
+                  <p className="feed-desc">{t.desc}</p>
+                </div>
+              ))}
+            </div>
           </div>
+          <div className="feed-hint">› languages · frameworks · infra · hover to pause</div>
         </div>
       </section>
 
