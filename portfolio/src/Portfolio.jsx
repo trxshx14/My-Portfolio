@@ -6,6 +6,18 @@ const NAV_LINKS = ["Home", "About", "Works", "Experience", "Services", "Contact"
 
 const WORKS = [
   {
+    title: "Aura Beauty",
+    type: "3D Web Experience",
+    role: "Frontend Engineer & Designer",
+    year: "2026",
+    pipeline: "Figma → Next.js + R3F + GSAP → Vercel",
+    problem: "Static product photos can't convey a cosmetic product's texture, formulation, or feel online.",
+    desc: "Immersive scrollytelling showcase for a premium cosmetics brand — a scroll-synced WebGL product that rotates and morphs through the story, with custom frosted-glass shader materials, cursor-tracking physics, and real-time shade tinting at 60 FPS.",
+    tags: ["Next.js", "TypeScript", "React Three Fiber", "GSAP", "Tailwind CSS"],
+    github: "https://github.com/trxshx14/aura-beauty",
+    demo: "https://aura-beauty-omega.vercel.app/",
+  },
+  {
     title: "AttendMe",
     type: "Full-Stack App",
     role: "Full-Stack Developer",
@@ -50,10 +62,18 @@ const STACK = [
     cat: "Frontend",
     items: [
       { name: "React", level: "Shipped" },
+      { name: "Next.js", level: "Shipped" },
+      { name: "TypeScript", level: "Shipped" },
       { name: "JavaScript", level: "Shipped" },
-      { name: "HTML + CSS", level: "Shipped" },
       { name: "Tailwind CSS", level: "Shipped" },
-      { name: "TypeScript", level: "Learning" },
+    ],
+  },
+  {
+    cat: "Motion & 3D",
+    items: [
+      { name: "React Three Fiber", level: "Shipped" },
+      { name: "GSAP + ScrollTrigger", level: "Shipped" },
+      { name: "Three.js Shaders", level: "Shipped" },
     ],
   },
   {
@@ -84,6 +104,13 @@ const STACK = [
 ];
 
 const EXPERIENCE = [
+  {
+    year: "2026",
+    role: "Frontend Engineer & Designer",
+    org: "Aura Beauty · Portfolio Project",
+    desc: "Built an immersive 3D product showcase with Next.js, TypeScript, React Three Fiber, and GSAP ScrollTrigger — scroll-synced WebGL, custom physical materials, and a decoupled scrollytelling architecture.",
+    type: "project",
+  },
   {
     year: "2026 — Present",
     role: "Full-Stack Developer",
@@ -411,7 +438,7 @@ export default function Portfolio() {
 
         /* ── works ── */
         .works-head { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 48px; gap: 20px; flex-wrap: wrap; }
-        .works-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+        .works-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
         .work-card {
           background: var(--ink);
           padding: 32px 28px;
@@ -476,7 +503,7 @@ export default function Portfolio() {
         }
         .badge-shipped { color: var(--green); border: 1px solid rgba(93, 202, 165, 0.3); }
         .badge-learning { color: var(--amber); border: 1px solid rgba(250, 199, 117, 0.3); }
-        .stack-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 36px; }
+        .stack-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 36px; }
         .stack-cat { font-family: var(--mono); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--pink); padding-bottom: 12px; border-bottom: 1px solid var(--line-strong); margin-bottom: 4px; }
         .stack-row {
           display: flex; justify-content: space-between; align-items: center;
@@ -616,7 +643,7 @@ export default function Portfolio() {
             </div>
             <div className="hero-meta rise d4">
               <div>
-                <div className="num">3</div>
+                <div className="num">4</div>
                 <div className="lbl">Projects shipped</div>
               </div>
               <div>
