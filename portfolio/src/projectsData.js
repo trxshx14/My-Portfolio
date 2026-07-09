@@ -49,4 +49,20 @@ export const WORKS = [
     demo: "https://cozypomodoro-by-trishadev.vercel.app/",
     caseStudy: "/cozy-pomodoro-case-study",
   },
+  {
+  slug: "nook",
+  type: "3D Product Design",
+  year: "2026",
+  role: "Solo build — concept, 3D interaction design, engineering",
+  title: "Nook",
+  image: "/images/nook-cover.png", // swap in your own screenshot
+  problem:
+    "3D spatial manipulation is naturally clunky for a casual user — dragging objects in a scene, avoiding the camera fighting back, snapping things into place without pixel-perfect fiddling. Most browser-based 3D tools feel like engineering demos, not products.",
+  desc:
+    "A cozy 3D room arranger: pick from pastel furniture pieces across 6 categories, drag them into a room that snaps to a grid, rotate and recolor them, then re-skin the whole space with one-click aesthetic themes — Cozy Cottage, Retro 70s, Space Minimalist. A resident pathfinding cat wanders the floor and sits down in protest if your furniture blocks her path. One Zustand store is the single source of truth — the same placedItems array drives the 3D scene, the UI panels, persistence, and the cat's pathing logic.",
+  pipeline: "Concept → UX flow → R3F prototype → interaction polish → deploy",
+  tags: ["React 18", "TypeScript", "React Three Fiber", "drei", "Zustand", "Vite"],
+  demo: "https://nook-trc.vercel.app/",
+  github: "https://github.com/trxshx14/Nook",
+},
 ];
