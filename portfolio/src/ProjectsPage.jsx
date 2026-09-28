@@ -1,308 +1,132 @@
-import { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { WORKS } from "./projectsData";
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
+import { ThemeToggle, useTheme } from "./ThemeToggle";
+import { usePageMeta } from "./usePageMeta";
+import { MediaFrame } from "./MediaFrame";
+import { TransitionLink } from "./TransitionLink";
+import { PROFILE, WORKS } from "./projectsData";
 
 export default function ProjectsPage() {
   const location = useLocation();
-  const [theme, setTheme] = useState(() => {
-    const saved = localStorage.getItem("theme");
-    if (saved) return saved;
-    return window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
-  });
-
-  useEffect(() => {
-    document.documentElement.dataset.theme = theme;
-    localStorage.setItem("theme", theme);
-  }, [theme]);
+  const { theme, toggle } = useTheme();
+  usePageMeta(
+    `Projects — ${PROFILE.name}`,
+    `${WORKS.length} live projects by ${PROFILE.name}: ${WORKS.map((w) => w.title).join(", ")}.`
+  );
 
   // Scroll to the project targeted by the hash (e.g. /projects#aura-beauty)
   useEffect(() => {
     if (location.hash) {
       const el = document.getElementById(location.hash.slice(1));
-      if (el) {
-        // Wait a tick so layout (fonts/images) settles before scrolling
-        requestAnimationFrame(() => el.scrollIntoView({ behavior: "smooth", block: "start" }));
-      }
+      if (el) requestAnimationFrame(() => el.scrollIntoView({ behavior: "smooth", block: "start" }));
     } else {
       window.scrollTo(0, 0);
     }
   }, [location]);
 
   return (
-    <div className="projects-page">
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Outfit:wght@300..700&family=JetBrains+Mono:wght@400;500&display=swap');
+    <div className="pp">
+      <style>{CSS}</style>
 
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-        :root {
-          --ink: #14101F;
-          --ink-2: #1A1428;
-          --pink: #E2A4C4;
-          --rose: #B36B93;
-          --lavender: #C8B8D8;
-          --text: #F0EAF7;
-          --muted: #A99DBE;
-          --faint: #7E7194;
-          --line: rgba(226, 164, 196, 0.14);
-          --line-strong: rgba(226, 164, 196, 0.32);
-          --nav-bg: rgba(20, 16, 31, 0.9);
-          --serif: 'Fraunces', Georgia, serif;
-          --sans: 'Outfit', system-ui, sans-serif;
-          --mono: 'JetBrains Mono', ui-monospace, monospace;
-        }
-
-        :root[data-theme="light"] {
-          --ink: #FBF7F4;
-          --ink-2: #F3E7E1;
-          --pink: #B3547F;
-          --rose: #99416B;
-          --lavender: #7A5E86;
-          --text: #2B2927;
-          --muted: #6E6259;
-          --faint: #85756B;
-          --line: rgba(43, 41, 39, 0.12);
-          --line-strong: rgba(179, 84, 127, 0.35);
-          --nav-bg: rgba(251, 247, 244, 0.9);
-        }
-
-        .theme-btn {
-          background: none; border: 1px solid var(--line-strong); border-radius: 4px;
-          width: 38px; height: 38px; flex-shrink: 0;
-          display: inline-flex; align-items: center; justify-content: center;
-          cursor: pointer; color: var(--muted);
-          transition: color 0.2s, border-color 0.2s;
-        }
-        .theme-btn:hover { color: var(--pink); border-color: var(--pink); }
-
-        html { scroll-behavior: smooth; }
-        html, body, #root { width: 100%; background: var(--ink); }
-
-        .projects-page {
-          font-family: var(--sans);
-          font-size: 16px;
-          background: var(--ink);
-          color: var(--text);
-          min-height: 100vh;
-          line-height: 1.6;
-        }
-
-        .projects-page h1, .projects-page h2, .projects-page h3 { color: var(--text); }
-
-        ::selection { background: var(--pink); color: var(--ink); }
-
-        .pp-wrap { max-width: 1080px; margin: 0 auto; padding: 0 32px; }
-
-        @keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
-        .rise { animation: rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
-
-        @media (prefers-reduced-motion: reduce) {
-          *, *::before, *::after { animation: none !important; transition: none !important; }
-          html { scroll-behavior: auto; }
-        }
-
-        /* ── header ── */
-        .pp-nav {
-          position: sticky; top: 0; z-index: 100;
-          height: 68px; display: flex; align-items: center;
-          background: var(--nav-bg);
-          backdrop-filter: blur(14px);
-          -webkit-backdrop-filter: blur(14px);
-          border-bottom: 1px solid var(--line);
-        }
-        .pp-nav-inner { display: flex; align-items: center; justify-content: space-between; width: 100%; }
-        .pp-logo { font-family: var(--mono); font-size: 14px; font-weight: 500; color: var(--text); text-decoration: none; }
-        .pp-logo em { font-family: var(--serif); font-style: italic; color: var(--pink); font-size: 16px; }
-        .pp-back {
-          font-family: var(--mono); font-size: 13px; color: var(--muted);
-          text-decoration: none; transition: color 0.2s;
-        }
-        .pp-back:hover { color: var(--pink); }
-
-        /* ── page head ── */
-        .pp-head { padding: 88px 0 64px; border-bottom: 1px solid var(--line); }
-        .pp-eyebrow {
-          font-family: var(--mono); font-size: 12px; font-weight: 500;
-          letter-spacing: 0.16em; text-transform: uppercase; color: var(--rose);
-          margin-bottom: 20px;
-        }
-        .pp-head h1 {
-          font-family: var(--serif); font-weight: 380;
-          font-size: clamp(38px, 5.6vw, 60px);
-          line-height: 1.08; letter-spacing: -0.015em; margin-bottom: 18px;
-        }
-        .pp-head h1 em { font-style: italic; color: var(--pink); font-weight: 400; }
-        .pp-head p { color: var(--muted); max-width: 540px; }
-
-        /* ── project blocks ── */
-        .project {
-          padding: 88px 0;
-          border-bottom: 1px solid var(--line);
-          scroll-margin-top: 88px;
-        }
-        .project-top { display: flex; justify-content: space-between; align-items: baseline; gap: 20px; margin-bottom: 10px; }
-        .project-type { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--rose); }
-        .project-year { font-family: var(--mono); font-size: 12.5px; color: var(--faint); }
-        .project h2 {
-          font-family: var(--serif); font-weight: 420;
-          font-size: clamp(32px, 4.6vw, 48px);
-          letter-spacing: -0.012em; line-height: 1.08; margin-bottom: 6px;
-        }
-        .project-role { font-size: 14.5px; color: var(--muted); margin-bottom: 36px; }
-
-        .project-grid { display: grid; grid-template-columns: 1fr 320px; gap: 56px; align-items: start; }
-
-        .project-image {
-          width: 100%; border-radius: 6px; display: block;
-          border: 1px solid var(--line-strong);
-          margin-bottom: 32px;
-        }
-        .project-k {
-          font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em;
-          text-transform: uppercase; color: var(--rose);
-          display: block; margin-bottom: 8px;
-        }
-        .project-problem, .project-desc { color: var(--muted); line-height: 1.75; margin-bottom: 28px; max-width: 580px; }
-        .project-desc { color: var(--text); }
-
-        .project-side { display: flex; flex-direction: column; gap: 28px; position: sticky; top: 100px; }
-        .project-pipeline {
-          font-family: var(--mono); font-size: 12px; color: var(--lavender);
-          background: rgba(226, 164, 196, 0.06);
-          border-left: 2px solid var(--pink);
-          padding: 12px 14px; line-height: 1.6;
-        }
-        .project-tags { font-family: var(--mono); font-size: 12px; color: var(--faint); line-height: 2; }
-        .project-links { display: flex; flex-direction: column; }
-        .project-link {
-          display: flex; justify-content: space-between; align-items: center;
-          font-family: var(--mono); font-size: 13px; color: var(--text);
-          text-decoration: none; padding: 14px 2px;
-          border-bottom: 1px solid var(--line);
-          transition: color 0.2s, padding-left 0.25s;
-        }
-        .project-link:first-child { border-top: 1px solid var(--line); }
-        .project-link:hover { color: var(--pink); padding-left: 8px; }
-        .project-link .arr { color: var(--rose); }
-
-        /* ── footer ── */
-        .pp-foot { padding: 64px 0 80px; text-align: left; }
-        .pp-foot p { color: var(--muted); margin-bottom: 24px; max-width: 480px; }
-        .pp-foot .btn {
-          font-family: var(--sans); font-size: 14px; font-weight: 550;
-          padding: 12px 26px; border-radius: 4px; cursor: pointer;
-          text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
-          background: var(--pink); color: var(--ink); border: 1px solid transparent;
-          transition: background 0.2s;
-        }
-        .pp-foot .btn:hover { background: var(--text); }
-
-        @media (max-width: 820px) {
-          .pp-wrap { padding: 0 20px; }
-          .project { padding: 64px 0; }
-          .project-grid { grid-template-columns: 1fr; gap: 36px; }
-          .project-side { position: static; }
-        }
-      `}</style>
-
-      {/* ─── HEADER ─── */}
-      <nav className="pp-nav">
-        <div className="pp-wrap pp-nav-inner">
-          <Link to="/" className="pp-logo">
+      <header className="pp-nav">
+        <div className="container pp-nav-inner">
+          <TransitionLink to="/" className="pp-logo">
             trisha<em>.dev</em>
-          </Link>
-          <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
-            <button
-              className="theme-btn"
-              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
-            >
-              {theme === "dark" ? (
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="12" cy="12" r="4" />
-                  <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
-                </svg>
-              ) : (
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
-                </svg>
-              )}
-            </button>
-            <Link to="/" className="pp-back">← Back to home</Link>
+          </TransitionLink>
+          <div className="pp-nav-actions">
+            <ThemeToggle theme={theme} toggle={toggle} />
+            <a href={PROFILE.resume} target="_blank" rel="noreferrer" className="btn btn-ghost btn-sm pp-resume">
+              Resume <span aria-hidden="true">↗</span>
+            </a>
+            <TransitionLink to="/" className="text-link">
+              <span aria-hidden="true">←</span> Home
+            </TransitionLink>
           </div>
-        </div>
-      </nav>
-
-      {/* ─── PAGE HEAD ─── */}
-      <header className="pp-head">
-        <div className="pp-wrap rise">
-          <div className="pp-eyebrow">Projects</div>
-          <h1>
-            Every project, from <em>first wireframe</em>
-            <br />
-            to final deploy.
-          </h1>
-          <p>
-            Each piece here went through the full pipeline — designed in Figma,
-            built by hand, and shipped to production.
-          </p>
         </div>
       </header>
 
-      {/* ─── PROJECTS ─── */}
       <main>
-        {WORKS.map((w) => (
-          <article key={w.slug} id={w.slug} className="project">
-            <div className="pp-wrap">
-              <div className="project-top">
-                <span className="project-type">{w.type}</span>
-                <span className="project-year">{w.year}</span>
-              </div>
-              <h2>{w.title}</h2>
-              <div className="project-role">{w.role}</div>
+        <header className="pp-head">
+          <div className="container rise">
+            <p className="eyebrow">Projects</p>
+            <h1 className="t-h1 pp-title">
+              Every project, from <em>first idea</em> to final deploy.
+            </h1>
+            <p className="lead pp-lede">
+              Each piece went through the full pipeline — designed and built directly in code, and
+              shipped to production.
+            </p>
+            <nav className="pp-index" aria-label="Jump to project">
+              {WORKS.map((w, i) => (
+                <a key={w.slug} href={`#${w.slug}`}>
+                  <span className="pp-index-num">{String(i + 1).padStart(2, "0")}</span>
+                  {w.title}
+                </a>
+              ))}
+            </nav>
+          </div>
+        </header>
 
-              <div className="project-grid">
-                <div>
-                  {w.image && (
-                    <img
-                      className="project-image"
-                      src={w.image}
-                      alt={`${w.title} interface preview`}
-                      loading="lazy"
-                    />
+        {WORKS.map((w, i) => (
+          <article key={w.slug} id={w.slug} className="pp-project" aria-labelledby={`${w.slug}-title`} data-morph-scope>
+            <div className="container">
+              <div className="pp-top">
+                <span className="eyebrow">
+                  {String(i + 1).padStart(2, "0")} · {w.type}
+                </span>
+                <span className="pp-year">{w.year}</span>
+              </div>
+              <h2 id={`${w.slug}-title`} className="t-h2 pp-project-title" data-morph="">{w.title}</h2>
+              <p className="pp-role">{w.role}</p>
+
+              <div className="pp-grid">
+                <div className="pp-main">
+                  <MediaFrame work={w} eager={i === 0} className="pp-media" />
+
+                  <h3 className="pp-k">Problem</h3>
+                  <p className="pp-problem">{w.problem}</p>
+
+                  <h3 className="pp-k">What I built</h3>
+                  <p className="pp-desc">{w.desc}</p>
+
+                  {w.highlights?.length > 0 && (
+                    <>
+                      <h3 className="pp-k">Engineering highlights</h3>
+                      <ul className="pp-highlights">
+                        {w.highlights.map((h) => (
+                          <li key={h}>{h}</li>
+                        ))}
+                      </ul>
+                    </>
                   )}
-                  <span className="project-k">Problem</span>
-                  <p className="project-problem">{w.problem}</p>
-                  <span className="project-k">What I built</span>
-                  <p className="project-desc">{w.desc}</p>
                 </div>
 
-                <aside className="project-side">
+                <aside className="pp-side" aria-label={`${w.title} details`}>
                   <div>
-                    <span className="project-k">Pipeline</span>
-                    <div className="project-pipeline">{w.pipeline}</div>
+                    <h3 className="pp-k">Pipeline</h3>
+                    <p className="pp-pipeline">{w.pipeline}</p>
                   </div>
                   <div>
-                    <span className="project-k">Stack</span>
-                    <div className="project-tags">{w.tags.join(" · ")}</div>
+                    <h3 className="pp-k">Stack</h3>
+                    <p className="pp-tags">{w.tags.join(" · ")}</p>
                   </div>
-                  <div className="project-links">
+                  <div className="pp-links">
                     {w.demo && (
-                      <a href={w.demo} target="_blank" rel="noreferrer" className="project-link">
-                        Live demo <span className="arr">↗</span>
+                      <a href={w.demo} target="_blank" rel="noreferrer" className="pp-link is-primary">
+                        Live demo <span aria-hidden="true">↗</span>
                       </a>
                     )}
-                    <a href={w.github} target="_blank" rel="noreferrer" className="project-link">
-                      GitHub <span className="arr">↗</span>
+                    <a href={w.github} target="_blank" rel="noreferrer" className="pp-link">
+                      Source code <span aria-hidden="true">↗</span>
                     </a>
                     {w.caseStudy && (
-                      <Link to={w.caseStudy} className="project-link">
-                        Case study <span className="arr">→</span>
-                      </Link>
+                      <TransitionLink to={w.caseStudy} morph className="pp-link">
+                        Read the case study <span aria-hidden="true">→</span>
+                      </TransitionLink>
                     )}
                     {w.apk && (
-                      <a href={w.apk} download className="project-link">
-                        Download APK <span className="arr">↓</span>
+                      <a href={w.apk} download className="pp-link">
+                        Download Android APK <span aria-hidden="true">↓</span>
                       </a>
                     )}
                   </div>
@@ -313,18 +137,118 @@ export default function ProjectsPage() {
         ))}
       </main>
 
-      {/* ─── FOOTER CTA ─── */}
       <footer className="pp-foot">
-        <div className="pp-wrap">
-          <p>
-            Like what you see? I'm open for freelance projects and collaborations —
-            I respond within 24 hours.
-          </p>
-          <a href="mailto:cararagtrisharaye@gmail.com" className="btn">
-            Get in touch
-          </a>
+        <div className="container">
+          <h2 className="t-h3">
+            Like what you see? <em>Let's talk.</em>
+          </h2>
+          <p>{PROFILE.availability}. I reply within 24 hours.</p>
+          <div className="pp-foot-actions">
+            <a href={`mailto:${PROFILE.email}`} className="btn btn-primary">Email me</a>
+            <a href={PROFILE.resume} target="_blank" rel="noreferrer" className="btn btn-ghost">
+              Resume <span aria-hidden="true">↗</span>
+            </a>
+          </div>
         </div>
       </footer>
     </div>
   );
 }
+
+const CSS = `
+.pp { min-height: 100vh; }
+
+.pp-nav {
+  position: sticky; top: 0; z-index: 100; height: var(--nav-h);
+  display: flex; align-items: center;
+  background: var(--nav-bg);
+  -webkit-backdrop-filter: blur(16px) saturate(1.2);
+  backdrop-filter: blur(16px) saturate(1.2);
+  border-bottom: 1px solid var(--line);
+}
+.pp-nav-inner { display: flex; align-items: center; justify-content: space-between; gap: var(--s-4); }
+.pp-logo { font: 500 var(--fs-sm)/1 var(--sans); color: var(--text); text-decoration: none; }
+.pp-logo em {
+  font-family: var(--serif); font-style: italic; font-size: 1.2em;
+  font-variation-settings: "SOFT" 100, "WONK" 0; color: var(--accent);
+}
+.pp-nav-actions { display: flex; align-items: center; gap: var(--s-4); }
+
+.pp-head { padding-block: var(--s-10) var(--s-8); border-bottom: 1px solid var(--line); }
+.pp-head .eyebrow { margin-bottom: var(--s-5); }
+.pp-title { max-width: 16ch; margin-bottom: var(--s-5); }
+.pp-lede { max-width: 48ch; margin-bottom: var(--s-7); }
+.pp-index { display: flex; flex-wrap: wrap; gap: var(--s-2); }
+.pp-index a {
+  display: inline-flex; align-items: center; gap: var(--s-2);
+  padding: 8px 16px; border-radius: var(--radius-pill);
+  border: 1px solid var(--line-strong);
+  font-size: var(--fs-sm); color: var(--text-2); text-decoration: none;
+  transition: color .2s var(--ease), border-color .2s var(--ease), background-color .2s var(--ease);
+}
+.pp-index a:hover { color: var(--accent); border-color: var(--accent); background: var(--accent-tint); }
+.pp-index-num { font-family: var(--mono); font-size: var(--fs-label); color: var(--text-3); }
+
+.pp-project {
+  padding-block: var(--section-y);
+  border-bottom: 1px solid var(--line);
+  scroll-margin-top: var(--nav-h);
+}
+.pp-project:nth-of-type(even) { background: var(--surface-1); }
+.pp-top { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s-4); margin-bottom: var(--s-4); }
+.pp-year { font-family: var(--mono); font-size: var(--fs-label); color: var(--text-3); }
+.pp-project-title { margin-bottom: var(--s-2); }
+.pp-role { font-size: var(--fs-sm); color: var(--text-3); margin-bottom: var(--s-7); }
+
+.pp-grid { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: var(--s-8); align-items: start; }
+.pp-media { margin-bottom: var(--s-7); }
+.pp-k {
+  font: 500 var(--fs-label)/1.2 var(--sans); letter-spacing: .08em; text-transform: uppercase;
+  color: var(--text-3); margin-bottom: var(--s-3);
+}
+.pp-problem, .pp-desc { line-height: 1.75; margin-bottom: var(--s-6); }
+.pp-desc { color: var(--text); }
+.pp-highlights { display: grid; gap: var(--s-3); }
+.pp-highlights li { position: relative; padding-left: var(--s-5); line-height: 1.6; }
+.pp-highlights li::before {
+  content: ''; position: absolute; left: 3px; top: .62em;
+  width: 5px; height: 5px; border-radius: 50%; border: 1px solid var(--accent);
+}
+
+.pp-side { display: flex; flex-direction: column; gap: var(--s-6); position: sticky; top: calc(var(--nav-h) + var(--s-6)); }
+.pp-pipeline {
+  font-family: var(--mono); font-size: var(--fs-label); line-height: 1.7; color: var(--text-2);
+  padding: var(--s-4); border-radius: var(--radius-sm);
+  background: var(--accent-tint); border: 1px solid var(--line);
+}
+.pp-tags { font-family: var(--mono); font-size: var(--fs-label); line-height: 1.8; color: var(--text-3); }
+.pp-links { display: flex; flex-direction: column; }
+.pp-link {
+  display: flex; justify-content: space-between; align-items: center;
+  padding-block: var(--s-4); border-bottom: 1px solid var(--line);
+  font-size: var(--fs-sm); font-weight: 500; color: var(--text); text-decoration: none;
+  transition: color .2s var(--ease);
+}
+.pp-link:first-child { border-top: 1px solid var(--line); }
+.pp-link.is-primary { color: var(--accent); }
+.pp-link:hover { color: var(--accent); }
+.pp-link > span { display: inline-block; transition: transform .3s var(--ease); }
+@media (hover: hover) and (pointer: fine) {
+  .pp-link { transition: color .2s var(--ease), transform .4s var(--ease); }
+  .pp-link:hover { transform: translateX(6px); }
+  .pp-link:hover > span { transform: translateX(3px); }
+}
+
+.pp-foot { padding-block: var(--s-9) var(--s-10); }
+.pp-foot .t-h3 { margin-bottom: var(--s-3); }
+.pp-foot p { margin-bottom: var(--s-6); }
+.pp-foot-actions { display: flex; flex-wrap: wrap; gap: var(--s-3); }
+
+@media (max-width: 860px) {
+  .pp-grid { grid-template-columns: 1fr; gap: var(--s-7); }
+  .pp-side { position: static; }
+}
+@media (max-width: 560px) {
+  .pp-resume { display: none; }
+}
+`;

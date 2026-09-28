@@ -184,8 +184,8 @@ export default function AttendMeCaseStudy() {
         <Bullets
           items={[
             "Lo-fi sketches explored roster layouts — list vs. grid vs. card-per-student. Paper testing showed a dense list with large tap targets won for speed.",
-            "Figma wireframes locked the information architecture: teacher screens mobile-first for one-handed use; admin screens desktop-dense.",
-            "The hi-fi prototype validated the exception-marking pattern — testers recorded a 30-student class in well under a minute.",
+            "Instead of static mockups, I prototyped directly in React to lock the information architecture: teacher screens mobile-first for one-handed use; admin screens desktop-dense.",
+            "The working prototype validated the exception-marking pattern — testers recorded a 30-student class in well under a minute.",
             "Each iteration was tested with users role-playing as teachers; friction points like accidental status toggles were fixed before development.",
           ]}
         />
@@ -274,7 +274,7 @@ export default function AttendMeCaseStudy() {
         <Bullets
           items={[
             "The Spring Boot REST API contract was defined before UI implementation, letting frontend and backend proceed in parallel and keeping the web and Android clients consistent.",
-            "Component-driven React frontend: roster rows, status badges, and report cards built as reusable components mirroring the Figma system one-to-one.",
+            "Component-driven React frontend: roster rows, status badges, and report cards built once as reusable components, so the design system lives in the code itself.",
             "I designed the MySQL schema around core entities — Users, Roles, Sections, Enrollments, Sessions, Attendance Records — with attendance as an append-only event log, preserving a full audit trail. The schema was later adapted for Supabase (PostgreSQL) hosting.",
             "Protected routing: role checks at the router level on the frontend, with the API as the source of truth — the UI hides what RBAC forbids; the server enforces it.",
           ]}
@@ -298,7 +298,7 @@ export default function AttendMeCaseStudy() {
         />
         <ChallengeCard
           challenge="One design system across React web and Android."
-          solution="A shared design-token approach — the same colors, spacing scale, and status semantics documented in Figma — kept both clients visually and behaviorally consistent despite different codebases."
+          solution="A shared design-token approach — the same colors, spacing scale, and status semantics defined once and mirrored in both codebases — kept both clients visually and behaviorally consistent."
         />
       </Section>
 

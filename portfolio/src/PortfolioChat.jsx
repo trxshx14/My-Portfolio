@@ -1,225 +1,300 @@
-// PortfolioChat.jsx
-import { useState, useRef, useEffect } from "react";
+// PortfolioChat.jsx — answers are built from projectsData.js, so they never go stale
+import { useState, useRef, useEffect, useId } from "react";
+import { PROFILE, WORKS, STACK, CERTS } from "./projectsData";
 
+const workList = WORKS.map((w) => `${w.title} (${w.tagline.replace(/\.$/, "")})`).join("; ");
+const stackList = STACK.map((g) => `${g.group}: ${g.items.map(([n]) => n).join(", ")}`).join(". ");
+
+// Order matters: the first entry whose keywords match wins.
 const KB = [
   {
-    keys: ["skill","tech","stack","know","language","react","spring","kotlin","figma","mysql","tailwind","javascript","css","html","android","supabase","firebase"],
-    reply: "Trisha's core stack includes React, JavaScript, HTML/CSS, and Tailwind CSS on the frontend. For backend she uses Spring Boot, REST APIs, and MySQL. On mobile she builds with Kotlin and Android Studio. She also designs in Figma and has used Supabase and Firebase.",
+    keys: ["available", "availability", "hire", "hiring", "internship", "intern", "freelance", "opportunity", "looking", "job", "role", "open"],
+    reply: `Yes — she's ${PROFILE.availability.toLowerCase()}. She's based in ${PROFILE.location} (${PROFILE.timezone}) and works remotely.`,
   },
   {
-    keys: ["project","work","built","portfolio","attendme","pomodoro","app"],
-    reply: "She has two featured projects: AttendMe — a full-stack attendance management system built with React, Spring Boot, MySQL, and a Kotlin Android app. And Cozy Pomodoro — a lofi productivity timer built with React and Tailwind. Both are live on GitHub!",
+    keys: ["location", "where", "based", "remote", "philippines", "cebu", "timezone", "time zone"],
+    reply: `She's based in ${PROFILE.location} (${PROFILE.timezone}) and is open to remote work worldwide.`,
   },
   {
-    keys: ["available","hire","open","internship","freelance","opportunity","looking","job"],
-    reply: "Yes! Trisha is actively open to internships and freelance — immediately, part-time or full-time. She's based in the Philippines and open to remote opportunities.",
+    keys: ["project", "projects", "work", "built", "portfolio", "aura", "attendme", "pomodoro", "nook", "app", "apps"],
+    reply: `She has ${WORKS.length} live projects: ${workList}. Each one has a live demo and source code on the Work section.`,
   },
   {
-    keys: ["education","study","school","university","degree","cit","cebu","it","information technology"],
-    reply: "She's a 4th-year BS Information Technology student at Cebu Institute of Technology University (2024–2027). She completed Senior High at Colegio de la Inmaculada Concepcion – Cebu.",
+    keys: ["skill", "skills", "tech", "stack", "language", "languages", "react", "next", "typescript", "spring", "kotlin", "mysql", "tailwind", "javascript", "android", "supabase", "three", "gsap"],
+    reply: `Her stack — ${stackList}.`,
   },
   {
-    keys: ["contact","email","reach","linkedin","github","message","connect"],
-    reply: "You can reach Trisha at cararagtrisharaye@gmail.com, connect on LinkedIn at linkedin.com/in/trisha-raye-cararag, or see her code at github.com/trxshx14. She replies within 24 hours!",
+    keys: ["experience", "developer", "designer", "worked", "background"],
+    reply: "She's a frontend developer and UX/UI designer who designs and builds directly in code, from first idea to production. On AttendMe she built the full stack — a Spring Boot REST API with JWT and role-based access, a MySQL schema, a React web app and an Android client.",
   },
   {
-    keys: ["experience","role","developer","designer","worked"],
-    reply: "Trisha worked as Full-Stack Developer on AttendMe, architecting REST APIs with Spring Boot and MySQL for a role-based attendance system. She's T-shaped — equally fluent in Figma design and production engineering.",
+    keys: ["service", "services", "offer", "ux", "ui", "design", "frontend", "fullstack", "full-stack", "full stack"],
+    reply: "She offers UI/UX design (user flows, layouts and interactions, designed directly in code), frontend development (responsive, accessible React), and full-stack development (Spring Boot APIs, MySQL, role-based access).",
   },
   {
-    keys: ["service","offer","ux","ui","design","frontend","fullstack","full-stack","full stack"],
-    reply: "She offers three services: UI/UX Design (wireframes, Figma prototypes), Frontend Development (React, responsive layouts), and Full-Stack Development (Spring Boot APIs, MySQL, role-based access).",
+    keys: ["education", "study", "studies", "school", "university", "degree", "college", "cit", "citu", "information technology"],
+    reply: `She's studying ${PROFILE.education}.`,
   },
   {
-    keys: ["certificate","certification","google","kaggle","asean","java"],
-    reply: "Certifications: AI Ready ASEAN (Google.org, 2025), Data Visualization (Kaggle, 2025), Java OOP (CodeChum · CITU, 2025), and ICT Congress (PSITE Cebu, 2026).",
+    keys: ["certificate", "certificates", "certification", "certifications", "google", "kaggle", "asean", "java"],
+    reply: `Certifications: ${CERTS.map((c) => `${c.name} (${c.issuer}, ${c.year})`).join(", ")}.`,
   },
   {
-    keys: ["location","where","based","remote","philippines"],
-    reply: "Trisha is based in Cebu, Philippines and is fully open to remote work worldwide.",
+    keys: ["contact", "email", "reach", "linkedin", "github", "message", "connect"],
+    reply: `Email ${PROFILE.email}, connect on LinkedIn at ${PROFILE.linkedinHandle}, or browse her code at ${PROFILE.githubHandle}. She replies within 24 hours.`,
   },
   {
-    keys: ["resume","cv","download"],
-    reply: "You can download her resume directly from the portfolio — there's a Resume button in the top navigation bar.",
+    keys: ["resume", "cv"],
+    reply: "You can open her resume from the Resume button in the navigation, the hero, or the Contact section.",
   },
   {
-    keys: ["hello","hi","hey","howdy","greet","good morning","good afternoon"],
-    reply: "Hi there! I'm Trisha's assistant. Ask me about her skills, projects, availability, or experience!",
+    keys: ["hello", "hi", "hey", "howdy", "good morning", "good afternoon", "good evening"],
+    reply: `Hi there! I'm ${PROFILE.name.split(" ")[0]}'s assistant. Ask me about her projects, stack, availability or how to reach her.`,
   },
   {
-    keys: ["who","trisha","about","herself","tell me"],
-    reply: "Trisha Raye Cararag is a 4th-year IT student in the Philippines who builds full-stack web and mobile apps. She designs in Figma AND ships production code with Spring Boot and React. Currently looking for internships and freelance work.",
+    keys: ["who", "trisha", "about", "herself", "tell me"],
+    reply: `${PROFILE.name} is a ${PROFILE.role.toLowerCase()} in ${PROFILE.location}. She designs directly in code and ships production apps with React, Spring Boot and Android.`,
   },
 ];
 
-const FALLBACK = "I'm not sure about that one! You can reach Trisha directly at cararagtrisharaye@gmail.com for anything specific.";
+const FALLBACK = `I'm not sure about that one. You can ask ${PROFILE.name.split(" ")[0]} directly at ${PROFILE.email}.`;
 
 const QUICK_CHIPS = [
-  { label: "Skills", msg: "What are her skills?" },
   { label: "Projects", msg: "Tell me about her projects" },
+  { label: "Stack", msg: "What is her tech stack?" },
   { label: "Available?", msg: "Is she available for hire?" },
-  { label: "Education", msg: "What is her education?" },
   { label: "Contact", msg: "How can I contact her?" },
 ];
 
+const escapeRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+const MATCHERS = KB.map((entry) => ({
+  reply: entry.reply,
+  // Whole-word matching, so "it" doesn't fire on "with" and "who" not on "whole"
+  re: new RegExp(`\\b(?:${entry.keys.map(escapeRe).join("|")})\\b`, "i"),
+}));
+
 function getReply(text) {
-  const lower = text.toLowerCase();
-  for (const entry of KB) {
-    if (entry.keys.some((k) => lower.includes(k))) return entry.reply;
-  }
-  return FALLBACK;
+  return MATCHERS.find((m) => m.re.test(text))?.reply ?? FALLBACK;
 }
 
 export default function PortfolioChat() {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState([
-    { type: "bot", text: "Hi! I'm Trisha's assistant. Ask me about her skills, projects, availability, or anything before reaching out." },
+    { type: "bot", text: `Hi! I'm ${PROFILE.name.split(" ")[0]}'s assistant. Ask me about her work, stack or availability before reaching out.` },
   ]);
   const [input, setInput] = useState("");
   const [typing, setTyping] = useState(false);
   const bottomRef = useRef(null);
+  const inputRef = useRef(null);
+  const toggleRef = useRef(null);
+  const timerRef = useRef(null);
+  const panelId = useId();
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
   }, [messages, typing]);
 
+  useEffect(() => {
+    if (!open) return;
+    inputRef.current?.focus();
+    const onKey = (e) => {
+      if (e.key === "Escape") {
+        setOpen(false);
+        toggleRef.current?.focus();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open]);
+
+  useEffect(() => () => clearTimeout(timerRef.current), []);
+
   const send = (text) => {
-    const val = text || input.trim();
-    if (!val) return;
+    const val = (text ?? input).trim();
+    if (!val || typing) return;
     setInput("");
     setMessages((prev) => [...prev, { type: "user", text: val }]);
     setTyping(true);
-    setTimeout(() => {
+    timerRef.current = setTimeout(() => {
       setTyping(false);
       setMessages((prev) => [...prev, { type: "bot", text: getReply(val) }]);
-    }, 700 + Math.random() * 400);
+    }, 600 + Math.random() * 400);
   };
 
   return (
     <>
-      {/* Floating toggle button */}
+      <style>{CSS}</style>
+
       <button
+        ref={toggleRef}
+        type="button"
+        className="chat-toggle"
         onClick={() => setOpen((o) => !o)}
-        style={{
-          position: "fixed", bottom: 28, right: 28, zIndex: 200,
-          width: 54, height: 54, borderRadius: "50%",
-          background: "linear-gradient(135deg, #E2A4C4, #9A6B8A)",
-          border: "none", cursor: "pointer",
-          display: "flex", alignItems: "center", justifyContent: "center",
-          boxShadow: "0 4px 24px rgba(226,164,196,0.4)",
-          transition: "transform 0.2s",
-        }}
-        onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.08)")}
-        onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-        aria-label="Open chat"
+        aria-label={open ? "Close chat assistant" : "Open chat assistant"}
+        aria-expanded={open}
+        aria-controls={panelId}
       >
         {open ? (
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+            <path d="M18 6L6 18M6 6l12 12" />
           </svg>
         ) : (
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
           </svg>
         )}
       </button>
 
-      {/* Chat window */}
       {open && (
-        <div style={{
-          position: "fixed", bottom: 92, right: 28, zIndex: 200,
-          width: 360, borderRadius: 20, overflow: "hidden",
-          background: "#0F0C1B",
-          border: "1px solid rgba(226,164,196,0.18)",
-          boxShadow: "0 20px 60px rgba(0,0,0,0.5)",
-          fontFamily: "'Inter', system-ui, sans-serif",
-          animation: "fadeUp 0.25s ease",
-        }}>
-
-          {/* Header */}
-          <div style={{ background: "#17122A", padding: "14px 18px", display: "flex", alignItems: "center", gap: 12, borderBottom: "1px solid rgba(226,164,196,0.1)" }}>
-            <div style={{ width: 36, height: 36, borderRadius: "50%", background: "linear-gradient(135deg, #E2A4C4, #9A6B8A)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, fontWeight: 700, color: "white", flexShrink: 0 }}>T</div>
-            <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 13, fontWeight: 600, color: "#EDE8F5" }}>Trisha's Assistant</div>
-              <div style={{ fontSize: 11, color: "#5DCAA5", display: "flex", alignItems: "center", gap: 5 }}>
-                <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#5DCAA5", display: "inline-block" }} />
-                Online · Ask me anything
-              </div>
+        <div id={panelId} className="chat-panel" role="dialog" aria-label={`Chat with ${PROFILE.name.split(" ")[0]}'s assistant`}>
+          <div className="chat-head">
+            <span className="chat-avatar" aria-hidden="true">T</span>
+            <div>
+              <p className="chat-title">{PROFILE.name.split(" ")[0]}'s assistant</p>
+              <p className="chat-sub">
+                <span className="chat-dot" aria-hidden="true" /> Answers from her portfolio
+              </p>
             </div>
           </div>
 
-          {/* Messages */}
-          <div style={{ height: 300, overflowY: "auto", padding: 16, display: "flex", flexDirection: "column", gap: 10 }}>
+          <div className="chat-log" role="log" aria-live="polite" aria-relevant="additions">
             {messages.map((m, i) => (
-              <div key={i} style={{ display: "flex", gap: 8, alignItems: "flex-end", flexDirection: m.type === "user" ? "row-reverse" : "row" }}>
-                {m.type === "bot" && (
-                  <div style={{ width: 26, height: 26, borderRadius: "50%", background: "linear-gradient(135deg, #E2A4C4, #9A6B8A)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 700, color: "white", flexShrink: 0 }}>T</div>
-                )}
-                <div style={{
-                  maxWidth: "78%", padding: "9px 13px", borderRadius: 14, fontSize: 12.5, lineHeight: 1.55,
-                  background: m.type === "bot" ? "#1E1833" : "linear-gradient(135deg, #E2A4C4, #9A6B8A)",
-                  border: m.type === "bot" ? "1px solid rgba(226,164,196,0.12)" : "none",
-                  color: m.type === "bot" ? "#C8B8D8" : "white",
-                  borderBottomLeftRadius: m.type === "bot" ? 4 : 14,
-                  borderBottomRightRadius: m.type === "user" ? 4 : 14,
-                }}>
-                  {m.text}
-                </div>
+              <div key={i} className={`chat-msg is-${m.type}`}>
+                <span className="visually-hidden">{m.type === "bot" ? "Assistant:" : "You:"}</span>
+                <p className="chat-bubble">{m.text}</p>
               </div>
             ))}
             {typing && (
-              <div style={{ display: "flex", gap: 8, alignItems: "flex-end" }}>
-                <div style={{ width: 26, height: 26, borderRadius: "50%", background: "linear-gradient(135deg, #E2A4C4, #9A6B8A)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 700, color: "white", flexShrink: 0 }}>T</div>
-                <div style={{ background: "#1E1833", border: "1px solid rgba(226,164,196,0.12)", borderRadius: 14, borderBottomLeftRadius: 4, padding: "10px 14px", display: "flex", gap: 4 }}>
-                  {[0, 0.2, 0.4].map((d, i) => (
-                    <span key={i} style={{ width: 6, height: 6, borderRadius: "50%", background: "#9A6B8A", display: "inline-block", animation: `bounce 1.2s ease-in-out ${d}s infinite` }} />
-                  ))}
-                </div>
+              <div className="chat-msg is-bot" aria-label="Assistant is typing">
+                <p className="chat-bubble chat-typing">
+                  <span /> <span /> <span />
+                </p>
               </div>
             )}
             <div ref={bottomRef} />
           </div>
 
-          {/* Quick chips */}
-          <div style={{ display: "flex", gap: 6, flexWrap: "wrap", padding: "0 14px 10px" }}>
+          <div className="chat-chips">
             {QUICK_CHIPS.map((c) => (
-              <button key={c.label} onClick={() => send(c.msg)} style={{
-                background: "rgba(226,164,196,0.08)", border: "1px solid rgba(226,164,196,0.2)",
-                color: "#E2A4C4", borderRadius: 100, padding: "5px 12px", fontSize: 11.5,
-                fontWeight: 500, cursor: "pointer", fontFamily: "inherit", transition: "all 0.2s",
-              }}
-                onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(226,164,196,0.18)"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(226,164,196,0.08)"; }}
-              >{c.label}</button>
+              <button key={c.label} type="button" className="chat-chip" onClick={() => send(c.msg)}>
+                {c.label}
+              </button>
             ))}
           </div>
 
-          {/* Input */}
-          <div style={{ display: "flex", gap: 8, padding: "12px 14px", borderTop: "1px solid rgba(226,164,196,0.08)", background: "#17122A", alignItems: "center" }}>
+          <form
+            className="chat-form"
+            onSubmit={(e) => {
+              e.preventDefault();
+              send();
+            }}
+          >
+            <label htmlFor={`${panelId}-input`} className="visually-hidden">Ask a question</label>
             <input
+              id={`${panelId}-input`}
+              ref={inputRef}
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && send()}
-              placeholder="Ask me about Trisha..."
-              style={{
-                flex: 1, background: "#0F0C1B", border: "1px solid rgba(226,164,196,0.2)",
-                borderRadius: 100, padding: "8px 14px", fontSize: 12.5,
-                color: "#EDE8F5", fontFamily: "inherit", outline: "none",
-              }}
+              placeholder="Ask about her work…"
+              autoComplete="off"
             />
-            <button onClick={() => send()} style={{
-              width: 34, height: 34, borderRadius: "50%", flexShrink: 0,
-              background: "linear-gradient(135deg, #E2A4C4, #9A6B8A)",
-              border: "none", cursor: "pointer",
-              display: "flex", alignItems: "center", justifyContent: "center",
-            }}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+            <button type="submit" className="chat-send" aria-label="Send message" disabled={!input.trim()}>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M5 12h14M13 6l6 6-6 6" />
               </svg>
             </button>
-          </div>
+          </form>
         </div>
       )}
     </>
   );
 }
+
+const CSS = `
+.chat-toggle {
+  position: fixed; right: clamp(16px, 3vw, 28px); bottom: clamp(16px, 3vw, 28px); z-index: 200;
+  width: 52px; height: 52px; border-radius: 50%; border: none;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--accent); color: var(--on-accent);
+  box-shadow: 0 10px 30px -10px color-mix(in srgb, var(--plum) 70%, transparent);
+  transition: transform .25s var(--ease), background-color .2s var(--ease);
+}
+.chat-toggle:hover { transform: translateY(-2px); background: var(--accent-hover); }
+
+.chat-panel {
+  position: fixed; z-index: 200;
+  right: clamp(16px, 3vw, 28px); bottom: calc(clamp(16px, 3vw, 28px) + 64px);
+  width: min(360px, calc(100vw - 32px));
+  display: flex; flex-direction: column; overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: var(--surface-1); border: 1px solid var(--line-strong);
+  box-shadow: 0 30px 60px -24px rgba(0, 0, 0, .45);
+  font-family: var(--sans);
+  animation: rise .3s var(--ease) both;
+}
+
+.chat-head {
+  display: flex; align-items: center; gap: var(--s-3);
+  padding: var(--s-4) var(--s-5); border-bottom: 1px solid var(--line);
+}
+.chat-avatar {
+  width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;
+  display: grid; place-items: center;
+  font-family: var(--serif); font-style: italic; font-size: 1rem;
+  background: var(--accent-tint); color: var(--accent); border: 1px solid var(--line-strong);
+}
+.chat-title { font-size: var(--fs-sm); font-weight: 500; color: var(--text); }
+.chat-sub { display: flex; align-items: center; gap: 6px; font-size: var(--fs-label); color: var(--text-3); }
+.chat-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--ok); }
+
+.chat-log {
+  height: min(320px, 45vh); overflow-y: auto; overscroll-behavior: contain;
+  padding: var(--s-4); display: flex; flex-direction: column; gap: var(--s-3);
+}
+.chat-msg { display: flex; }
+.chat-msg.is-user { justify-content: flex-end; }
+.chat-bubble {
+  max-width: 82%; padding: 10px 14px; border-radius: 16px;
+  font-size: var(--fs-sm); line-height: 1.55;
+}
+.is-bot .chat-bubble { background: var(--surface-2); color: var(--text-2); border-bottom-left-radius: 6px; }
+.is-user .chat-bubble { background: var(--accent); color: var(--on-accent); border-bottom-right-radius: 6px; }
+
+.chat-typing { display: inline-flex; gap: 4px; align-items: center; }
+.chat-typing span {
+  width: 6px; height: 6px; border-radius: 50%; background: var(--text-3);
+  animation: chat-bounce 1.2s ease-in-out infinite;
+}
+.chat-typing span:nth-child(2) { animation-delay: .2s; }
+.chat-typing span:nth-child(3) { animation-delay: .4s; }
+@keyframes chat-bounce { 0%, 60%, 100% { transform: none; opacity: .5; } 30% { transform: translateY(-4px); opacity: 1; } }
+
+.chat-chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 var(--s-4) var(--s-3); }
+.chat-chip {
+  padding: 6px 12px; border-radius: var(--radius-pill);
+  font-size: var(--fs-label); font-weight: 500;
+  background: transparent; color: var(--text-2); border: 1px solid var(--line-strong);
+  transition: color .2s var(--ease), border-color .2s var(--ease), background-color .2s var(--ease);
+}
+.chat-chip:hover { color: var(--accent); border-color: var(--accent); background: var(--accent-tint); }
+
+.chat-form {
+  display: flex; gap: var(--s-2); align-items: center;
+  padding: var(--s-3) var(--s-4); border-top: 1px solid var(--line);
+}
+.chat-form input {
+  flex: 1; min-width: 0; height: 40px; padding: 0 var(--s-4);
+  border-radius: var(--radius-pill); border: 1px solid var(--line-strong);
+  background: var(--bg); color: var(--text); font-size: var(--fs-sm);
+}
+.chat-form input::placeholder { color: var(--text-3); }
+.chat-form input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.chat-send {
+  width: 40px; height: 40px; border-radius: 50%; border: none; flex-shrink: 0;
+  display: grid; place-items: center;
+  background: var(--accent); color: var(--on-accent);
+  transition: opacity .2s var(--ease), background-color .2s var(--ease);
+}
+.chat-send:hover:not(:disabled) { background: var(--accent-hover); }
+.chat-send:disabled { opacity: .45; cursor: default; }
+`;

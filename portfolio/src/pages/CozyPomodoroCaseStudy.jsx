@@ -187,7 +187,7 @@ export default function CozyPomodoroStudy() {
         <Bullets
           items={[
             "Early concept sketches explored the relationship between timer state and character state — when should the cat nap? when does it wake up? These micro-narrative decisions drove the interaction model.",
-            "Figma wireframes established the split layout: timer card on the left, contextual content (window, goals) on the right. The hierarchy kept the clock primary without making it oppressive.",
+            "Layouts were built straight in React rather than mocked up first: timer card on the left, contextual content (window, goals) on the right. The hierarchy kept the clock primary without making it oppressive.",
             "The prototype validated that theme colour transitions at mode-switch were the single most-impactful change — users described it as the app 'breathing' with them.",
             "Pixel art iteration for the cat companion went through six rounds: the final version communicates studying, napping, and celebrating purely through posture and animation, with no text labels needed.",
           ]}
@@ -195,8 +195,8 @@ export default function CozyPomodoroStudy() {
       </Section>
 
       {/* ---------- 9. wireframes ---------- */}
-      <Section num={9} label="Wireframes">
-        <H2>Decisions made in greyscale.</H2>
+      <Section num={9} label="Layout Decisions">
+        <H2>Layout decisions, made in code.</H2>
         <Bullets
           items={[
             "Timer as the anchor: always visible at comfortable reading size, never competing with decorative elements for attention.",
@@ -204,7 +204,7 @@ export default function CozyPomodoroStudy() {
             "Settings as a sliding drawer rather than a page: customisation is an aside, not a destination, keeping the ambient experience uninterrupted.",
           ]}
         />
-        <CSImage src="/images/cozy-dashboard.png" alt="Cozy Pomodoro mid-fidelity wireframes" />
+        <CSImage src="/images/cozy-dashboard.png" alt="Cozy Pomodoro timer layout" />
         <CSImage src="/images/cozy-hifi.png" alt="Cozy Pomodoro high-fidelity screens" />
       </Section>
 
